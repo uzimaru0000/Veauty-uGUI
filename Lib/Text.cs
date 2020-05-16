@@ -1,3 +1,4 @@
+using System.Linq;
 using Veauty.VTree;
 using UnityEngine;
 using Veauty.GameObject.Attributes;
@@ -10,9 +11,11 @@ namespace Veauty.uGUI
         protected TextAttribute(string key, T value): base(key, value) { }
     }
     
-    public class Text : GUIBase
+    public class Text : GUIBase<UI.Text>
     {
-        public Text(IAttribute[] attrs) : base(attrs, new IVTree[0]) { }
+        public Text(string value, IAttribute[] attrs) : base("Text", attrs.Append(new Value(value)).ToArray(), new IVTree[0]) { }
+
+        public Text(string value) : base("Text", new IAttribute[] {new Value(value)}, new IVTree[0]) { }
 
         public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
         {
@@ -22,21 +25,12 @@ namespace Veauty.uGUI
             return go;
         }
 
-        public override IVTree Render() =>
-            new Node<UI.Text>("Text", this.attrs, this.kids);
-
         public override void Destroy(UnityEngine.GameObject go) { }
         
         public class Value : TextAttribute<string>
         {
             public Value(string text): base("TextValue", text) { }
             protected override void Apply(UI.Text text) => text.text = this.value;
-        }
-
-        public class Color : TextAttribute<UnityEngine.Color>
-        {
-            public Color(UnityEngine.Color color) : base("TextColor", color) { }
-            protected override void Apply(UI.Text text) => text.color = this.value;
         }
 
         public class Font : TextAttribute<UnityEngine.Font>

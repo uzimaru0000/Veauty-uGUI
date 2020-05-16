@@ -2,16 +2,21 @@ using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
-    public abstract class GUIBase : Widget
+    public abstract class GUIBase<T> : Widget where T : UnityEngine.Component
     {
+        private string tag;
         public IAttribute[] attrs;
         public IVTree[] kids;
         
-        public GUIBase(IAttribute[] attrs, IVTree[] kids)
+        public GUIBase(string tag, IAttribute[] attrs, IVTree[] kids)
         {
+            this.tag = tag;
             this.attrs = attrs;
             this.kids = kids;
         }
+
+        public override IVTree Render() => new Node<T>(tag, attrs, kids);
+        
         public override IVTree[] GetKids() => this.kids;
     }
 

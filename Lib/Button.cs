@@ -11,9 +11,9 @@ namespace Veauty.uGUI
         protected ButtonAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class Button : GUIBase
+    public class Button : GUIBase<UI.Button>
     {
-        public Button(IAttribute[] attrs, IVTree[] kids) : base(attrs, kids) { }
+        public Button(IAttribute[] attrs, IVTree[] kids) : base("Button", attrs, kids) { }
         
         public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
         {
@@ -23,8 +23,6 @@ namespace Veauty.uGUI
             btn.targetGraphic = img;
             return go;
         }
-        public override IVTree Render() =>
-            new Node<UI.Button>("Button", this.attrs, this.kids);
         public override void Destroy(UnityEngine.GameObject go) { }
         
         public class OnClick : ButtonAttribute<UnityAction>
