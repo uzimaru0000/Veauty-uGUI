@@ -1,0 +1,16 @@
+{
+    "name": "Veauty.uGUI",
+    "references": [
+        "GUID:3c3bb70aa1db24066afd143bd98757f8",
+        "GUID:e03e0f3903aa54ca98e244bad894e4cd"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
