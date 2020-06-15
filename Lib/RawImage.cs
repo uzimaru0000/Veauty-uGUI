@@ -4,9 +4,9 @@ using UI = UnityEngine.UI;
 
 namespace Veauty.uGUI
 {
-    public abstract class RawImageAttribute<T> : GUIAttributeBase<UI.RawImage, T>
+    public abstract class RawImageAttribute<T> : GuiAttributeBase<UI.RawImage, T>
     {
-        public RawImageAttribute(string key, T value) : base(key, value)
+        protected RawImageAttribute(string key, T value) : base(key, value)
         {
         }
     }
@@ -28,20 +28,20 @@ namespace Veauty.uGUI
         
         public class Texture : RawImageAttribute<UnityEngine.Texture>
         {
-            public Texture(string key, UnityEngine.Texture value) : base(key, value)
+            public Texture(UnityEngine.Texture value) : base("RawImageTexture", value)
             {
             }
 
-            protected override void Apply(UI.RawImage component) => component.texture = this.value;
+            protected override void Apply(UI.RawImage component) => component.texture = this.GetValue();
         }
 
         public class UVRect : RawImageAttribute<UnityEngine.Rect>
         {
-            public UVRect(string key, Rect value) : base(key, value)
+            public UVRect(Rect value) : base("RawImageUVRect", value)
             {
             }
 
-            protected override void Apply(UI.RawImage component) => component.uvRect = this.value;
+            protected override void Apply(UI.RawImage component) => component.uvRect = this.GetValue();
         }
     }
 }

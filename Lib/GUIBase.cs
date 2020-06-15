@@ -5,10 +5,10 @@ namespace Veauty.uGUI
     public abstract class GUIBase<T> : Widget where T : UnityEngine.Component
     {
         private string tag;
-        public IAttribute[] attrs;
-        public IVTree[] kids;
-        
-        public GUIBase(string tag, IAttribute[] attrs, IVTree[] kids)
+        private IAttribute[] attrs;
+        private IVTree[] kids;
+
+        protected GUIBase(string tag, IAttribute[] attrs, IVTree[] kids)
         {
             this.tag = tag;
             this.attrs = attrs;
@@ -20,35 +20,18 @@ namespace Veauty.uGUI
         public override IVTree[] GetKids() => this.kids;
     }
 
-    public abstract class GUIAttributeBase<T, U> : IAttribute
-    where T : UnityEngine.Component
+    public abstract class GuiAttributeBase<T1, T2> : Attribute<T2>
+    where T1 : UnityEngine.Component
     {
-        private string key;
-        protected U value;
-        
-        protected GUIAttributeBase(string key, U value)
+        protected GuiAttributeBase(string key, T2 value) : base(key, value) { }
+        protected abstract void Apply(T1 component);
+        public override void Apply(UnityEngine.GameObject obj)
         {
-            this.key = key;
-            this.value = value;
-        }
-        protected abstract void Apply(T component);
-        public string GetKey() => this.key;
-        public void Apply(UnityEngine.GameObject obj)
-        {
-            var component = obj.GetComponent<T>();
+            var component = obj.GetComponent<T1>();
             if (component)
             {
                 Apply(component);
             }
-        }
-        public bool Equals(IAttribute attr)
-        {
-            if (attr is GUIAttributeBase<T, U> other)
-            {
-                return this.value.Equals(other.value);
-            }
-
-            return false;
         }
     }
 }

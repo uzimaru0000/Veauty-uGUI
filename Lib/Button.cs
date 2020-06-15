@@ -6,7 +6,7 @@ using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
-    public abstract class ButtonAttribute<T> : GUIAttributeBase<UI.Button, T>
+    public abstract class ButtonAttribute<T> : GuiAttributeBase<UI.Button, T>
     {
         protected ButtonAttribute(string key, T value) : base(key, value) { }
     }
@@ -31,7 +31,7 @@ namespace Veauty.uGUI
             protected override void Apply(UI.Button component)
             {
                 component.onClick.RemoveAllListeners();
-                component.onClick.AddListener(this.value);
+                component.onClick.AddListener(this.GetValue());
             }
         }
     }
