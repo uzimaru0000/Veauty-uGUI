@@ -1,13 +1,13 @@
 {
   "name": "com.uzimaru.veauty-ugui",
   "displayName": "Veauty-uGUI",
-  "version": "0.1.0",
-  "unity": "2019.1",
+  "version": "0.4.0",
+  "unity": "2020.3",
   "description": "Veauty widget and attributes",
   "keywords": ["Library", "Virtual-Dom", "VDOM", "uGUI"],
   "category": "Library",
   "dependencies": {
-    "com.uzimaru.veauty": "https://github.com/uzimaru0000/Veauty.git",
-    "com.uzimaru.veauty-gameobject": "https://github.com/uzimaru0000/Veauty-GameObject.git"
+    "com.uzimaru.veauty": "https://github.com/uzimaru0000/Veauty.git#v0.4.0",
+    "com.uzimaru.veauty-gameobject": "https://github.com/uzimaru0000/Veauty-GameObject.git#v0.4.0"
   }
 }
