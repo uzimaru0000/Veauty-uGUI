@@ -116,9 +116,9 @@ namespace Veauty.uGUI
             }
         }
 
-        public class OnEndEdit : InputFieldAttribute<UnityEngine.UI.InputField.SubmitEvent>
+        public class OnEndEdit : InputFieldAttribute<UnityEngine.UI.InputField.EndEditEvent>
         {
-            public OnEndEdit(UnityEngine.UI.InputField.SubmitEvent value): base("onEndEdit", value) {}
+            public OnEndEdit(UnityEngine.UI.InputField.EndEditEvent value): base("onEndEdit", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
             {
                 component.onEndEdit = this.GetValue();
@@ -130,7 +130,7 @@ namespace Veauty.uGUI
             public OnValueChange(UnityEngine.UI.InputField.OnChangeEvent value): base("onValueChange", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
             {
-                component.onValueChange = this.GetValue();
+                component.onValueChanged = this.GetValue();
             }
         }
 

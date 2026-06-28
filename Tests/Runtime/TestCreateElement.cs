@@ -47,7 +47,7 @@ public class TestCreateElement
         yield return null;
 
         uiComponentTypes.ToList().ForEach(x => {
-            var comp = GameObject.FindObjectOfType(x);
+            var comp = GameObject.FindAnyObjectByType(x);
             Assert.IsNotNull(comp);
         });
         yield return null;
@@ -63,7 +63,7 @@ public class TestCreateElement
         }), typeof(UI.Button));
 
         ExecuteEvents.Execute(
-            target: GameObject.FindObjectOfType<UI.Button>().gameObject, 
+            target: GameObject.FindAnyObjectByType<UI.Button>().gameObject,
             eventData: new PointerEventData(EventSystem.current),
             functor: ExecuteEvents.pointerClickHandler
         );
@@ -79,7 +79,7 @@ public class TestCreateElement
             new Text.Value("Hello")
         }), typeof(UI.Text));
 
-        var text = GameObject.FindObjectOfType<UI.Text>();
+        var text = GameObject.FindAnyObjectByType<UI.Text>();
         Assert.AreEqual(text.text, "Hello");
     }
 }
