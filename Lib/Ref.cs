@@ -1,18 +1,29 @@
 using UnityEngine;
 using Veauty;
 
-public class Ref<T> : IAttribute<T>
+namespace Veauty.uGUI
 {
-    public T current;
-
-    public Ref(T defaultValue = default(T))
+    public class Ref<T> : IAttribute<T>
     {
-        current = defaultValue;
+        public T current;
+
+        public Ref(T defaultValue = default(T))
+        {
+            current = defaultValue;
+        }
+
+        public string GetKey() => "ref:" + GetHashCode();
+
+        public void Apply(T obj)
+        {
+            this.current = obj;
+        }
     }
+}
 
-    public string GetKey() => this.current != null ? this.current.GetHashCode().ToString() : "ref";
-    public void Apply(T obj)
+public class Ref<T> : Veauty.uGUI.Ref<T>
+{
+    public Ref(T defaultValue = default(T)) : base(defaultValue)
     {
-        this.current = obj;
     }
 }

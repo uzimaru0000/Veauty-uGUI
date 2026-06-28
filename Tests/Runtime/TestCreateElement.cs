@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
@@ -8,46 +7,66 @@ using UnityEngine.EventSystems;
 using UnityEngine.TestTools;
 using Veauty;
 using Veauty.GameObject;
+using Veauty.GameObject.Attributes;
 using Veauty.uGUI;
+using Veauty.VTree;
+using GameObjectRenderer = Veauty.GameObject.Renderer;
+using UnityGameObject = UnityEngine.GameObject;
+using UnityObject = UnityEngine.Object;
 
 struct Unit {}
 
 public class TestCreateElement
 {
-    GameObject root;
+    private UnityGameObject root;
+    private UnityGameObject eventSystem;
 
-    [OneTimeSetUp]
-    public void OneTimeSetUp()
+    [SetUp]
+    public void SetUp()
     {
-        var cam = new GameObject();
-        cam.AddComponent<Camera>();
+        this.root = new UnityGameObject("uGUI test root");
+        var canvas = this.root.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.targetDisplay = 0;
 
-        root = new GameObject("root");
-        var canv = root.AddComponent<Canvas>();
-        canv.renderMode = RenderMode.ScreenSpaceOverlay;
-        canv.targetDisplay = 0;
-        var scaler = root.AddComponent<UI.CanvasScaler>();
+        var scaler = this.root.AddComponent<UI.CanvasScaler>();
         scaler.uiScaleMode = UI.CanvasScaler.ScaleMode.ConstantPixelSize;
         scaler.scaleFactor = 1;
         scaler.referencePixelsPerUnit = 100;
-        root.AddComponent<UI.GraphicRaycaster>();
+        this.root.AddComponent<UI.GraphicRaycaster>();
 
-        var eventSystem = new GameObject("EventSystem");
-        eventSystem.AddComponent<EventSystem>();
+        this.eventSystem = new UnityGameObject("EventSystem");
+        this.eventSystem.AddComponent<EventSystem>();
     }
 
-    VeautyObject<Unit> CreateVeauty(System.Func<Unit, Veauty.IVTree> func)
+    [TearDown]
+    public void TearDown()
     {
-        return new VeautyObject<Unit>(root, func);
+        if (this.root != null)
+        {
+            UnityObject.DestroyImmediate(this.root);
+            this.root = null;
+        }
+
+        if (this.eventSystem != null)
+        {
+            UnityObject.DestroyImmediate(this.eventSystem);
+            this.eventSystem = null;
+        }
     }
 
-    IEnumerator UITest(System.Func<Unit, Veauty.IVTree> func, params System.Type[] uiComponentTypes)
+    private VeautyObject<Unit> CreateVeauty(System.Func<Unit, IVTree> func)
     {
-        var veauty = CreateVeauty(func);
+        return new VeautyObject<Unit>(this.root, func);
+    }
+
+    private IEnumerator UITest(System.Func<Unit, IVTree> func, params System.Type[] uiComponentTypes)
+    {
+        _ = CreateVeauty(func);
         yield return null;
 
         uiComponentTypes.ToList().ForEach(x => {
-            var comp = GameObject.FindAnyObjectByType(x);
+            var comp = UnityObject.FindAnyObjectByType(x);
             Assert.IsNotNull(comp);
         });
         yield return null;
@@ -56,30 +75,140 @@ public class TestCreateElement
     [UnityTest]
     public IEnumerator TestCreateButtonElement()
     {
-        var state = false;
+        var clicked = false;
 
-        yield return UITest(_ => new Button(new IAttribute<GameObject>[] {
-            new Button.OnClick(() => state = true)
+        yield return UITest(_ => new Button(new IAttribute<UnityGameObject>[] {
+            new Button.OnClick(() => clicked = true)
         }), typeof(UI.Button));
 
         ExecuteEvents.Execute(
-            target: GameObject.FindAnyObjectByType<UI.Button>().gameObject,
+            target: UnityObject.FindAnyObjectByType<UI.Button>().gameObject,
             eventData: new PointerEventData(EventSystem.current),
             functor: ExecuteEvents.pointerClickHandler
         );
         yield return null;
 
-        Assert.True(state);
+        Assert.True(clicked);
     }
 
     [UnityTest]
     public IEnumerator TestCreateTextElement()
     {
-        yield return UITest(_ => new Text(new IAttribute<GameObject>[] {
+        yield return UITest(_ => new Text(new IAttribute<UnityGameObject>[] {
             new Text.Value("Hello")
         }), typeof(UI.Text));
 
-        var text = GameObject.FindAnyObjectByType<UI.Text>();
-        Assert.AreEqual(text.text, "Hello");
+        var text = UnityObject.FindAnyObjectByType<UI.Text>();
+        Assert.AreEqual("Hello", text.text);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateImageElement()
+    {
+        yield return UITest(_ => new Image(new IAttribute<UnityGameObject>[] {
+            new Image.PreserveAspect(true),
+            new Graphic.Color(Color.red)
+        }), typeof(UI.Image));
+
+        var image = UnityObject.FindAnyObjectByType<UI.Image>();
+        Assert.IsTrue(image.preserveAspect);
+        Assert.AreEqual(Color.red, image.color);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateInputFieldElement()
+    {
+        var changedValue = "";
+        var onValueChanged = new UI.InputField.OnChangeEvent();
+        onValueChanged.AddListener(value => changedValue = value);
+
+        yield return UITest(_ => new InputField(new IAttribute<UnityGameObject>[] {
+            new InputField.Text("initial"),
+            new InputField.OnValueChanged(onValueChanged)
+        }), typeof(UI.InputField));
+
+        var input = UnityObject.FindAnyObjectByType<UI.InputField>();
+        Assert.AreEqual("initial", input.text);
+
+        input.onValueChanged.Invoke("edited");
+        Assert.AreEqual("edited", changedValue);
+    }
+
+    [UnityTest]
+    public IEnumerator TestVeautyObjectUpdatesTextElement()
+    {
+        System.Action<CounterState> setState = null;
+
+        _ = new VeautyObject<CounterState>(
+            this.root,
+            (state, set) => {
+                setState = set;
+                return new Text(new IAttribute<UnityGameObject>[] {
+                    new Text.Value("Count " + state.Count)
+                });
+            },
+            new CounterState { Count = 1 }
+        );
+
+        yield return null;
+        Assert.AreEqual("Count 1", UnityObject.FindAnyObjectByType<UI.Text>().text);
+
+        setState(new CounterState { Count = 2 });
+        yield return null;
+
+        Assert.AreEqual("Count 2", UnityObject.FindAnyObjectByType<UI.Text>().text);
+    }
+
+    [UnityTest]
+    public IEnumerator TestRefCapturesRenderedGameObject()
+    {
+        var textRef = new Veauty.uGUI.Ref<UnityGameObject>();
+
+        yield return UITest(_ => new Text(new IAttribute<UnityGameObject>[] {
+            textRef,
+            new Text.Value("ref")
+        }), typeof(UI.Text));
+
+        Assert.IsNotNull(textRef.current);
+        Assert.AreSame(UnityObject.FindAnyObjectByType<UI.Text>().gameObject, textRef.current);
+    }
+
+    [UnityTest]
+    public IEnumerator TestKeyedChildrenReorderKeepsComponents()
+    {
+        var oldTree = new KeyedNode<UnityGameObject>(
+            "root",
+            NoAttrs(),
+            ("a", new Text(new IAttribute<UnityGameObject>[] { new Text.Value("A") })),
+            ("b", new Text(new IAttribute<UnityGameObject>[] { new Text.Value("B") })),
+            ("c", new Text(new IAttribute<UnityGameObject>[] { new Text.Value("C") }))
+        );
+        var newTree = new KeyedNode<UnityGameObject>(
+            "root",
+            NoAttrs(),
+            ("b", new Text(new IAttribute<UnityGameObject>[] { new Text.Value("B2") })),
+            ("c", new Text(new IAttribute<UnityGameObject>[] { new Text.Value("C") })),
+            ("a", new Text(new IAttribute<UnityGameObject>[] { new Text.Value("A") }))
+        );
+        var rendered = GameObjectRenderer.Render(oldTree, true);
+        rendered.transform.SetParent(this.root.transform, false);
+        var oldB = rendered.transform.GetChild(1).gameObject;
+
+        rendered = Patch.Apply(rendered, oldTree, Diff<UnityGameObject>.Calc(oldTree, newTree), true);
+        yield return null;
+
+        Assert.AreSame(oldB, rendered.transform.GetChild(0).gameObject);
+        Assert.AreEqual("B2", rendered.transform.GetChild(0).GetComponent<UI.Text>().text);
+        Assert.AreEqual("A", rendered.transform.GetChild(2).GetComponent<UI.Text>().text);
+    }
+
+    private static IAttribute<UnityGameObject>[] NoAttrs()
+    {
+        return new IAttribute<UnityGameObject>[] {};
+    }
+
+    private struct CounterState
+    {
+        public int Count;
     }
 }
