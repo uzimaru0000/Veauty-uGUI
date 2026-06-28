@@ -89,6 +89,10 @@ public class TestCreateElement
         yield return null;
 
         Assert.True(clicked);
+
+        var button = UnityObject.FindAnyObjectByType<UI.Button>();
+        Assert.IsNotNull(button.targetGraphic);
+        Assert.IsNotNull(button.GetComponent<UI.Image>());
     }
 
     [UnityTest]
@@ -100,6 +104,7 @@ public class TestCreateElement
 
         var text = UnityObject.FindAnyObjectByType<UI.Text>();
         Assert.AreEqual("Hello", text.text);
+        Assert.IsNotNull(text.font);
     }
 
     [UnityTest]
@@ -200,6 +205,26 @@ public class TestCreateElement
         Assert.AreSame(oldB, rendered.transform.GetChild(0).gameObject);
         Assert.AreEqual("B2", rendered.transform.GetChild(0).GetComponent<UI.Text>().text);
         Assert.AreEqual("A", rendered.transform.GetChild(2).GetComponent<UI.Text>().text);
+    }
+
+    [UnityTest]
+    public IEnumerator TestTypedKeyedLayoutGroupRendersComponent()
+    {
+        var tree = new KeyedNode<UnityGameObject, UI.HorizontalLayoutGroup>(
+            "rows",
+            new IAttribute<UnityGameObject>[] {
+                new HorizontalOrVerticalLayoutGroup.Spacing(8f)
+            },
+            ("a", new Text(new IAttribute<UnityGameObject>[] { new Text.Value("A") }))
+        );
+
+        var rendered = GameObjectRenderer.Render(tree, true);
+        rendered.transform.SetParent(this.root.transform, false);
+        yield return null;
+
+        var layout = rendered.GetComponent<UI.HorizontalLayoutGroup>();
+        Assert.IsNotNull(layout);
+        Assert.AreEqual(8f, layout.spacing);
     }
 
     private static IAttribute<UnityGameObject>[] NoAttrs()
