@@ -17,6 +17,11 @@ namespace Veauty.uGUI
         public override void Apply(UnityEngine.GameObject obj)
         {
             var component = obj.GetComponent<T1>();
+            if (component == null && typeof(T1) == typeof(UnityEngine.UI.LayoutElement))
+            {
+                component = obj.AddComponent<UnityEngine.UI.LayoutElement>() as T1;
+            }
+
             if (component)
             {
                 Apply(component);

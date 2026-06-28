@@ -227,6 +227,18 @@ public class TestCreateElement
         Assert.AreEqual(8f, layout.spacing);
     }
 
+    [UnityTest]
+    public IEnumerator TestLayoutElementAttributeAddsLayoutElement()
+    {
+        yield return UITest(_ => new Button(new IAttribute<UnityGameObject>[] {
+            new LayoutElement.PreferredHeight(88f)
+        }), typeof(UI.Button));
+
+        var layoutElement = UnityObject.FindAnyObjectByType<UI.Button>().GetComponent<UI.LayoutElement>();
+        Assert.IsNotNull(layoutElement);
+        Assert.AreEqual(88f, layoutElement.preferredHeight);
+    }
+
     private static IAttribute<UnityGameObject>[] NoAttrs()
     {
         return new IAttribute<UnityGameObject>[] {};
