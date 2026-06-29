@@ -179,7 +179,7 @@ namespace Veauty.uGUI
             var bg = CreateChild(go, ""Background"");
             bg.AddComponent<UnityEngine.CanvasRenderer>();
             var bgImage = bg.AddComponent<UnityEngine.UI.Image>();
-            bgImage.color = new UnityEngine.Color(0.22f, 0.24f, 0.28f);
+            bgImage.color = new UnityEngine.Color(0.30f, 0.32f, 0.38f);
             Stretch(bg.GetComponent<UnityEngine.RectTransform>());
             var fillArea = CreateChild(go, ""Fill Area"");
             var fillAreaRect = fillArea.GetComponent<UnityEngine.RectTransform>();
