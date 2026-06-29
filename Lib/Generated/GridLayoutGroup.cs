@@ -15,14 +15,7 @@ namespace Veauty.uGUI
     {
         public GridLayoutGroup(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class StartCorner : GridLayoutGroupAttribute<UnityEngine.UI.GridLayoutGroup.Corner>
+        public partial class StartCorner : GridLayoutGroupAttribute<UnityEngine.UI.GridLayoutGroup.Corner>
         {
             public StartCorner(UnityEngine.UI.GridLayoutGroup.Corner value): base("startCorner", value) {}
             protected override void Apply(UnityEngine.UI.GridLayoutGroup component)
@@ -31,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class StartAxis : GridLayoutGroupAttribute<UnityEngine.UI.GridLayoutGroup.Axis>
+        public partial class StartAxis : GridLayoutGroupAttribute<UnityEngine.UI.GridLayoutGroup.Axis>
         {
             public StartAxis(UnityEngine.UI.GridLayoutGroup.Axis value): base("startAxis", value) {}
             protected override void Apply(UnityEngine.UI.GridLayoutGroup component)
@@ -40,7 +33,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class CellSize : GridLayoutGroupAttribute<UnityEngine.Vector2>
+        public partial class CellSize : GridLayoutGroupAttribute<UnityEngine.Vector2>
         {
             public CellSize(UnityEngine.Vector2 value): base("cellSize", value) {}
             protected override void Apply(UnityEngine.UI.GridLayoutGroup component)
@@ -49,7 +42,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Spacing : GridLayoutGroupAttribute<UnityEngine.Vector2>
+        public partial class Spacing : GridLayoutGroupAttribute<UnityEngine.Vector2>
         {
             public Spacing(UnityEngine.Vector2 value): base("spacing", value) {}
             protected override void Apply(UnityEngine.UI.GridLayoutGroup component)
@@ -58,7 +51,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Constraint : GridLayoutGroupAttribute<UnityEngine.UI.GridLayoutGroup.Constraint>
+        public partial class Constraint : GridLayoutGroupAttribute<UnityEngine.UI.GridLayoutGroup.Constraint>
         {
             public Constraint(UnityEngine.UI.GridLayoutGroup.Constraint value): base("constraint", value) {}
             protected override void Apply(UnityEngine.UI.GridLayoutGroup component)
@@ -67,7 +60,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ConstraintCount : GridLayoutGroupAttribute<System.Int32>
+        public partial class ConstraintCount : GridLayoutGroupAttribute<System.Int32>
         {
             public ConstraintCount(System.Int32 value): base("constraintCount", value) {}
             protected override void Apply(UnityEngine.UI.GridLayoutGroup component)

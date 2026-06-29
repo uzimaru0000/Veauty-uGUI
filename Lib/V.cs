@@ -3,8 +3,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using Veauty.VTree;
 using UnityGameObject = UnityEngine.GameObject;
+using Veauty.uGUI;
 
-namespace Veauty.uGUI
+namespace Veauty.uGUI.Presets
 {
     public static class V
     {
@@ -138,7 +139,23 @@ namespace Veauty.uGUI
                 isOn.HasValue ? new Toggle.IsOn(isOn.Value) : null,
                 color.HasValue ? new Graphic.Color(color.Value) : null,
                 interactable.HasValue ? new Selectable.Interactable(interactable.Value) : null);
-            return new Element(children => new Toggle(attrs, children));
+            return new Element(children =>
+            {
+                var parts = new System.Collections.Generic.List<IVTree>();
+                bool hasBg = false, hasCm = false;
+                var content = new System.Collections.Generic.List<IVTree>();
+                foreach (var c in children)
+                {
+                    if (c is Toggle.ToggleBackground) hasBg = true;
+                    else if (c is Toggle.ToggleCheckmark) hasCm = true;
+                    if (c is ISubComponent) parts.Add(c);
+                    else content.Add(c);
+                }
+                if (!hasBg) parts.Add(new Toggle.ToggleBackground());
+                if (!hasCm) parts.Add(new Toggle.ToggleCheckmark());
+                parts.AddRange(content);
+                return new Toggle(attrs, parts.ToArray());
+            });
         }
 
         public static Element ToggleGroup(
@@ -160,13 +177,31 @@ namespace Veauty.uGUI
             IAttribute<UnityGameObject>[] extras = null)
         {
             var attrs = BuildAttrs(extras,
-                value.HasValue ? new Slider.Value(value.Value) : null,
                 minValue.HasValue ? new Slider.MinValue(minValue.Value) : null,
                 maxValue.HasValue ? new Slider.MaxValue(maxValue.Value) : null,
                 wholeNumbers.HasValue ? new Slider.WholeNumbers(wholeNumbers.Value) : null,
                 direction.HasValue ? new Slider.Direction(direction.Value) : null,
-                interactable.HasValue ? new Selectable.Interactable(interactable.Value) : null);
-            return new Element(children => new Slider(attrs, children));
+                interactable.HasValue ? new Selectable.Interactable(interactable.Value) : null,
+                value.HasValue ? new Slider.Value(value.Value) : null);
+            return new Element(children =>
+            {
+                var parts = new System.Collections.Generic.List<IVTree>();
+                bool hasBg = false, hasFill = false, hasHandle = false;
+                var content = new System.Collections.Generic.List<IVTree>();
+                foreach (var c in children)
+                {
+                    if (c is Slider.SliderBackground) hasBg = true;
+                    else if (c is Slider.SliderFill) hasFill = true;
+                    else if (c is Slider.SliderHandle) hasHandle = true;
+                    if (c is ISubComponent) parts.Add(c);
+                    else content.Add(c);
+                }
+                if (!hasBg) parts.Add(new Slider.SliderBackground());
+                if (!hasFill) parts.Add(new Slider.SliderFill());
+                if (!hasHandle) parts.Add(new Slider.SliderHandle());
+                parts.AddRange(content);
+                return new Slider(attrs, parts.ToArray());
+            });
         }
 
         public static Element Scrollbar(
@@ -177,11 +212,25 @@ namespace Veauty.uGUI
             IAttribute<UnityGameObject>[] extras = null)
         {
             var attrs = BuildAttrs(extras,
-                value.HasValue ? new Scrollbar.Value(value.Value) : null,
                 size.HasValue ? new Scrollbar.Size(size.Value) : null,
                 numberOfSteps.HasValue ? new Scrollbar.NumberOfSteps(numberOfSteps.Value) : null,
-                direction.HasValue ? new Scrollbar.Direction(direction.Value) : null);
-            return new Element(children => new Scrollbar(attrs, children));
+                direction.HasValue ? new Scrollbar.Direction(direction.Value) : null,
+                value.HasValue ? new Scrollbar.Value(value.Value) : null);
+            return new Element(children =>
+            {
+                var parts = new System.Collections.Generic.List<IVTree>();
+                bool hasHandle = false;
+                var content = new System.Collections.Generic.List<IVTree>();
+                foreach (var c in children)
+                {
+                    if (c is Scrollbar.ScrollbarHandlePart) hasHandle = true;
+                    if (c is ISubComponent) parts.Add(c);
+                    else content.Add(c);
+                }
+                if (!hasHandle) parts.Add(new Scrollbar.ScrollbarHandlePart());
+                parts.AddRange(content);
+                return new Scrollbar(attrs, parts.ToArray());
+            });
         }
 
         public static Element ScrollRect(
@@ -221,7 +270,23 @@ namespace Veauty.uGUI
                 characterLimit.HasValue ? new InputField.CharacterLimit(characterLimit.Value) : null,
                 readOnly.HasValue ? new InputField.ReadOnly(readOnly.Value) : null,
                 color.HasValue ? new Graphic.Color(color.Value) : null);
-            return new Element(children => new InputField(attrs, children));
+            return new Element(children =>
+            {
+                var parts = new System.Collections.Generic.List<IVTree>();
+                bool hasPh = false, hasTxt = false;
+                var content = new System.Collections.Generic.List<IVTree>();
+                foreach (var c in children)
+                {
+                    if (c is InputField.InputFieldPlaceholderPart) hasPh = true;
+                    else if (c is InputField.InputFieldTextPart) hasTxt = true;
+                    if (c is ISubComponent) parts.Add(c);
+                    else content.Add(c);
+                }
+                if (!hasPh) parts.Add(new InputField.InputFieldPlaceholderPart());
+                if (!hasTxt) parts.Add(new InputField.InputFieldTextPart());
+                parts.AddRange(content);
+                return new InputField(attrs, parts.ToArray());
+            });
         }
 
         public static Element Dropdown(

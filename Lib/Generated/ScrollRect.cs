@@ -11,36 +11,11 @@ namespace Veauty.uGUI
         protected ScrollRectAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class ScrollRect : GUIBase<UnityEngine.UI.ScrollRect>
+    public partial class ScrollRect : GUIBase<UnityEngine.UI.ScrollRect>
     {
         public ScrollRect(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            if (go.GetComponent<UnityEngine.UI.Image>() == null)
-                go.AddComponent<UnityEngine.UI.Image>();
-            if (go.GetComponent<UnityEngine.UI.RectMask2D>() == null)
-                go.AddComponent<UnityEngine.UI.RectMask2D>();
-            return go;
-        }
-
-        public override void AfterRenderKids(UnityEngine.GameObject go)
-        {
-            var scrollRect = go.GetComponent<UnityEngine.UI.ScrollRect>();
-            if (scrollRect != null && scrollRect.content == null && go.transform.childCount > 0)
-            {
-                var contentRT = go.transform.GetChild(0).GetComponent<UnityEngine.RectTransform>();
-                contentRT.anchorMin = new UnityEngine.Vector2(0f, 1f);
-                contentRT.anchorMax = UnityEngine.Vector2.one;
-                contentRT.pivot = new UnityEngine.Vector2(0.5f, 1f);
-                scrollRect.content = contentRT;
-            }
-        }
-
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class Content : ScrollRectAttribute<UnityEngine.RectTransform>
+        public partial class Content : ScrollRectAttribute<UnityEngine.RectTransform>
         {
             public Content(UnityEngine.RectTransform value): base("content", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -49,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Horizontal : ScrollRectAttribute<System.Boolean>
+        public partial class Horizontal : ScrollRectAttribute<System.Boolean>
         {
             public Horizontal(System.Boolean value): base("horizontal", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -58,7 +33,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Vertical : ScrollRectAttribute<System.Boolean>
+        public partial class Vertical : ScrollRectAttribute<System.Boolean>
         {
             public Vertical(System.Boolean value): base("vertical", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -67,7 +42,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class MovementType : ScrollRectAttribute<UnityEngine.UI.ScrollRect.MovementType>
+        public partial class MovementType : ScrollRectAttribute<UnityEngine.UI.ScrollRect.MovementType>
         {
             public MovementType(UnityEngine.UI.ScrollRect.MovementType value): base("movementType", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -76,7 +51,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Elasticity : ScrollRectAttribute<System.Single>
+        public partial class Elasticity : ScrollRectAttribute<System.Single>
         {
             public Elasticity(System.Single value): base("elasticity", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -85,7 +60,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Inertia : ScrollRectAttribute<System.Boolean>
+        public partial class Inertia : ScrollRectAttribute<System.Boolean>
         {
             public Inertia(System.Boolean value): base("inertia", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -94,7 +69,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class DecelerationRate : ScrollRectAttribute<System.Single>
+        public partial class DecelerationRate : ScrollRectAttribute<System.Single>
         {
             public DecelerationRate(System.Single value): base("decelerationRate", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -103,7 +78,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ScrollSensitivity : ScrollRectAttribute<System.Single>
+        public partial class ScrollSensitivity : ScrollRectAttribute<System.Single>
         {
             public ScrollSensitivity(System.Single value): base("scrollSensitivity", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -112,7 +87,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Viewport : ScrollRectAttribute<UnityEngine.RectTransform>
+        public partial class Viewport : ScrollRectAttribute<UnityEngine.RectTransform>
         {
             public Viewport(UnityEngine.RectTransform value): base("viewport", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -121,7 +96,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class HorizontalScrollbar : ScrollRectAttribute<UnityEngine.UI.Scrollbar>
+        public partial class HorizontalScrollbar : ScrollRectAttribute<UnityEngine.UI.Scrollbar>
         {
             public HorizontalScrollbar(UnityEngine.UI.Scrollbar value): base("horizontalScrollbar", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -130,7 +105,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class VerticalScrollbar : ScrollRectAttribute<UnityEngine.UI.Scrollbar>
+        public partial class VerticalScrollbar : ScrollRectAttribute<UnityEngine.UI.Scrollbar>
         {
             public VerticalScrollbar(UnityEngine.UI.Scrollbar value): base("verticalScrollbar", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -139,7 +114,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class HorizontalScrollbarVisibility : ScrollRectAttribute<UnityEngine.UI.ScrollRect.ScrollbarVisibility>
+        public partial class HorizontalScrollbarVisibility : ScrollRectAttribute<UnityEngine.UI.ScrollRect.ScrollbarVisibility>
         {
             public HorizontalScrollbarVisibility(UnityEngine.UI.ScrollRect.ScrollbarVisibility value): base("horizontalScrollbarVisibility", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -148,7 +123,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class VerticalScrollbarVisibility : ScrollRectAttribute<UnityEngine.UI.ScrollRect.ScrollbarVisibility>
+        public partial class VerticalScrollbarVisibility : ScrollRectAttribute<UnityEngine.UI.ScrollRect.ScrollbarVisibility>
         {
             public VerticalScrollbarVisibility(UnityEngine.UI.ScrollRect.ScrollbarVisibility value): base("verticalScrollbarVisibility", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -157,7 +132,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class HorizontalScrollbarSpacing : ScrollRectAttribute<System.Single>
+        public partial class HorizontalScrollbarSpacing : ScrollRectAttribute<System.Single>
         {
             public HorizontalScrollbarSpacing(System.Single value): base("horizontalScrollbarSpacing", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -166,7 +141,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class VerticalScrollbarSpacing : ScrollRectAttribute<System.Single>
+        public partial class VerticalScrollbarSpacing : ScrollRectAttribute<System.Single>
         {
             public VerticalScrollbarSpacing(System.Single value): base("verticalScrollbarSpacing", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -175,7 +150,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class OnValueChanged : ScrollRectAttribute<UnityEngine.UI.ScrollRect.ScrollRectEvent>
+        public partial class OnValueChanged : ScrollRectAttribute<UnityEngine.UI.ScrollRect.ScrollRectEvent>
         {
             public OnValueChanged(UnityEngine.UI.ScrollRect.ScrollRectEvent value): base("onValueChanged", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -184,7 +159,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Velocity : ScrollRectAttribute<UnityEngine.Vector2>
+        public partial class Velocity : ScrollRectAttribute<UnityEngine.Vector2>
         {
             public Velocity(UnityEngine.Vector2 value): base("velocity", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -193,7 +168,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class NormalizedPosition : ScrollRectAttribute<UnityEngine.Vector2>
+        public partial class NormalizedPosition : ScrollRectAttribute<UnityEngine.Vector2>
         {
             public NormalizedPosition(UnityEngine.Vector2 value): base("normalizedPosition", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -202,7 +177,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class HorizontalNormalizedPosition : ScrollRectAttribute<System.Single>
+        public partial class HorizontalNormalizedPosition : ScrollRectAttribute<System.Single>
         {
             public HorizontalNormalizedPosition(System.Single value): base("horizontalNormalizedPosition", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)
@@ -211,7 +186,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class VerticalNormalizedPosition : ScrollRectAttribute<System.Single>
+        public partial class VerticalNormalizedPosition : ScrollRectAttribute<System.Single>
         {
             public VerticalNormalizedPosition(System.Single value): base("verticalNormalizedPosition", value) {}
             protected override void Apply(UnityEngine.UI.ScrollRect component)

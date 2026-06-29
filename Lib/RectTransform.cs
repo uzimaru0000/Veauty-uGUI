@@ -8,16 +8,9 @@ namespace Veauty.uGUI
         protected RectTransformAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class RectTransform : GUIBase<UnityEngine.RectTransform>
+    public partial class RectTransform : GUIBase<UnityEngine.RectTransform>
     {
         public RectTransform(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
-
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-
-        public override void Destroy(UnityEngine.GameObject go) { }
 
         public class AnchorMin : RectTransformAttribute<UnityEngine.Vector2>
         {

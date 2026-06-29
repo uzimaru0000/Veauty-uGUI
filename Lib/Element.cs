@@ -1,7 +1,8 @@
 using Veauty.VTree;
 using UnityGameObject = UnityEngine.GameObject;
+using Veauty.uGUI;
 
-namespace Veauty.uGUI
+namespace Veauty.uGUI.Presets
 {
     public class Element : Widget<UnityGameObject>
     {

@@ -11,18 +11,11 @@ namespace Veauty.uGUI
         protected SelectableAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class Selectable : GUIBase<UnityEngine.UI.Selectable>
+    public partial class Selectable : GUIBase<UnityEngine.UI.Selectable>
     {
         public Selectable(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class Navigation : SelectableAttribute<UnityEngine.UI.Navigation>
+        public partial class Navigation : SelectableAttribute<UnityEngine.UI.Navigation>
         {
             public Navigation(UnityEngine.UI.Navigation value): base("navigation", value) {}
             protected override void Apply(UnityEngine.UI.Selectable component)
@@ -31,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Transition : SelectableAttribute<UnityEngine.UI.Selectable.Transition>
+        public partial class Transition : SelectableAttribute<UnityEngine.UI.Selectable.Transition>
         {
             public Transition(UnityEngine.UI.Selectable.Transition value): base("transition", value) {}
             protected override void Apply(UnityEngine.UI.Selectable component)
@@ -40,7 +33,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Colors : SelectableAttribute<UnityEngine.UI.ColorBlock>
+        public partial class Colors : SelectableAttribute<UnityEngine.UI.ColorBlock>
         {
             public Colors(UnityEngine.UI.ColorBlock value): base("colors", value) {}
             protected override void Apply(UnityEngine.UI.Selectable component)
@@ -49,7 +42,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class SpriteState : SelectableAttribute<UnityEngine.UI.SpriteState>
+        public partial class SpriteState : SelectableAttribute<UnityEngine.UI.SpriteState>
         {
             public SpriteState(UnityEngine.UI.SpriteState value): base("spriteState", value) {}
             protected override void Apply(UnityEngine.UI.Selectable component)
@@ -58,7 +51,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class AnimationTriggers : SelectableAttribute<UnityEngine.UI.AnimationTriggers>
+        public partial class AnimationTriggers : SelectableAttribute<UnityEngine.UI.AnimationTriggers>
         {
             public AnimationTriggers(UnityEngine.UI.AnimationTriggers value): base("animationTriggers", value) {}
             protected override void Apply(UnityEngine.UI.Selectable component)
@@ -67,7 +60,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class TargetGraphic : SelectableAttribute<UnityEngine.UI.Graphic>
+        public partial class TargetGraphic : SelectableAttribute<UnityEngine.UI.Graphic>
         {
             public TargetGraphic(UnityEngine.UI.Graphic value): base("targetGraphic", value) {}
             protected override void Apply(UnityEngine.UI.Selectable component)
@@ -76,7 +69,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Interactable : SelectableAttribute<System.Boolean>
+        public partial class Interactable : SelectableAttribute<System.Boolean>
         {
             public Interactable(System.Boolean value): base("interactable", value) {}
             protected override void Apply(UnityEngine.UI.Selectable component)
@@ -85,7 +78,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Image : SelectableAttribute<UnityEngine.UI.Image>
+        public partial class Image : SelectableAttribute<UnityEngine.UI.Image>
         {
             public Image(UnityEngine.UI.Image value): base("image", value) {}
             protected override void Apply(UnityEngine.UI.Selectable component)

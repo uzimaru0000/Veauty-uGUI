@@ -11,18 +11,11 @@ namespace Veauty.uGUI
         protected RawImageAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class RawImage : GUIBase<UnityEngine.UI.RawImage>
+    public partial class RawImage : GUIBase<UnityEngine.UI.RawImage>
     {
         public RawImage(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class Texture : RawImageAttribute<UnityEngine.Texture>
+        public partial class Texture : RawImageAttribute<UnityEngine.Texture>
         {
             public Texture(UnityEngine.Texture value): base("texture", value) {}
             protected override void Apply(UnityEngine.UI.RawImage component)
@@ -31,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class UvRect : RawImageAttribute<UnityEngine.Rect>
+        public partial class UvRect : RawImageAttribute<UnityEngine.Rect>
         {
             public UvRect(UnityEngine.Rect value): base("uvRect", value) {}
             protected override void Apply(UnityEngine.UI.RawImage component)

@@ -11,18 +11,11 @@ namespace Veauty.uGUI
         protected HorizontalOrVerticalLayoutGroupAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class HorizontalOrVerticalLayoutGroup : GUIBase<UnityEngine.UI.HorizontalOrVerticalLayoutGroup>
+    public partial class HorizontalOrVerticalLayoutGroup : GUIBase<UnityEngine.UI.HorizontalOrVerticalLayoutGroup>
     {
         public HorizontalOrVerticalLayoutGroup(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class Spacing : HorizontalOrVerticalLayoutGroupAttribute<System.Single>
+        public partial class Spacing : HorizontalOrVerticalLayoutGroupAttribute<System.Single>
         {
             public Spacing(System.Single value): base("spacing", value) {}
             protected override void Apply(UnityEngine.UI.HorizontalOrVerticalLayoutGroup component)
@@ -31,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ChildForceExpandWidth : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
+        public partial class ChildForceExpandWidth : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
         {
             public ChildForceExpandWidth(System.Boolean value): base("childForceExpandWidth", value) {}
             protected override void Apply(UnityEngine.UI.HorizontalOrVerticalLayoutGroup component)
@@ -40,7 +33,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ChildForceExpandHeight : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
+        public partial class ChildForceExpandHeight : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
         {
             public ChildForceExpandHeight(System.Boolean value): base("childForceExpandHeight", value) {}
             protected override void Apply(UnityEngine.UI.HorizontalOrVerticalLayoutGroup component)
@@ -49,7 +42,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ChildControlWidth : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
+        public partial class ChildControlWidth : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
         {
             public ChildControlWidth(System.Boolean value): base("childControlWidth", value) {}
             protected override void Apply(UnityEngine.UI.HorizontalOrVerticalLayoutGroup component)
@@ -58,7 +51,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ChildControlHeight : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
+        public partial class ChildControlHeight : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
         {
             public ChildControlHeight(System.Boolean value): base("childControlHeight", value) {}
             protected override void Apply(UnityEngine.UI.HorizontalOrVerticalLayoutGroup component)
@@ -67,7 +60,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ChildScaleWidth : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
+        public partial class ChildScaleWidth : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
         {
             public ChildScaleWidth(System.Boolean value): base("childScaleWidth", value) {}
             protected override void Apply(UnityEngine.UI.HorizontalOrVerticalLayoutGroup component)
@@ -76,7 +69,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ChildScaleHeight : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
+        public partial class ChildScaleHeight : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
         {
             public ChildScaleHeight(System.Boolean value): base("childScaleHeight", value) {}
             protected override void Apply(UnityEngine.UI.HorizontalOrVerticalLayoutGroup component)
@@ -85,7 +78,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ReverseArrangement : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
+        public partial class ReverseArrangement : HorizontalOrVerticalLayoutGroupAttribute<System.Boolean>
         {
             public ReverseArrangement(System.Boolean value): base("reverseArrangement", value) {}
             protected override void Apply(UnityEngine.UI.HorizontalOrVerticalLayoutGroup component)

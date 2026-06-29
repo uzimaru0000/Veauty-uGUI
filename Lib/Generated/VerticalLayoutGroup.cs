@@ -15,12 +15,5 @@ namespace Veauty.uGUI
     {
         public VerticalLayoutGroup(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
     }
 }

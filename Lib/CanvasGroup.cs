@@ -8,16 +8,9 @@ namespace Veauty.uGUI
         protected CanvasGroupAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class CanvasGroup : GUIBase<UnityEngine.CanvasGroup>
+    public partial class CanvasGroup : GUIBase<UnityEngine.CanvasGroup>
     {
         public CanvasGroup(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
-
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-
-        public override void Destroy(UnityEngine.GameObject go) { }
 
         public class Alpha : CanvasGroupAttribute<float>
         {

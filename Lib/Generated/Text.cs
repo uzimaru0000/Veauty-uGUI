@@ -11,24 +11,11 @@ namespace Veauty.uGUI
         protected TextAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class Text : GUIBase<UnityEngine.UI.Text>
+    public partial class Text : GUIBase<UnityEngine.UI.Text>
     {
         public Text(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            var text = go.GetComponent<UnityEngine.UI.Text>();
-            if (text.font == null)
-            {
-                text.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>("LegacyRuntime.ttf");
-            }
-
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class Value : TextAttribute<System.String>
+        public partial class Value : TextAttribute<System.String>
         {
             public Value(System.String value): base("Value", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -37,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Font : TextAttribute<UnityEngine.Font>
+        public partial class Font : TextAttribute<UnityEngine.Font>
         {
             public Font(UnityEngine.Font value): base("font", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -46,7 +33,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class SupportRichText : TextAttribute<System.Boolean>
+        public partial class SupportRichText : TextAttribute<System.Boolean>
         {
             public SupportRichText(System.Boolean value): base("supportRichText", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -55,7 +42,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ResizeTextForBestFit : TextAttribute<System.Boolean>
+        public partial class ResizeTextForBestFit : TextAttribute<System.Boolean>
         {
             public ResizeTextForBestFit(System.Boolean value): base("resizeTextForBestFit", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -64,7 +51,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ResizeTextMinSize : TextAttribute<System.Int32>
+        public partial class ResizeTextMinSize : TextAttribute<System.Int32>
         {
             public ResizeTextMinSize(System.Int32 value): base("resizeTextMinSize", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -73,7 +60,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ResizeTextMaxSize : TextAttribute<System.Int32>
+        public partial class ResizeTextMaxSize : TextAttribute<System.Int32>
         {
             public ResizeTextMaxSize(System.Int32 value): base("resizeTextMaxSize", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -82,7 +69,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Alignment : TextAttribute<UnityEngine.TextAnchor>
+        public partial class Alignment : TextAttribute<UnityEngine.TextAnchor>
         {
             public Alignment(UnityEngine.TextAnchor value): base("alignment", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -91,7 +78,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class AlignByGeometry : TextAttribute<System.Boolean>
+        public partial class AlignByGeometry : TextAttribute<System.Boolean>
         {
             public AlignByGeometry(System.Boolean value): base("alignByGeometry", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -100,7 +87,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class FontSize : TextAttribute<System.Int32>
+        public partial class FontSize : TextAttribute<System.Int32>
         {
             public FontSize(System.Int32 value): base("fontSize", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -109,7 +96,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class HorizontalOverflow : TextAttribute<UnityEngine.HorizontalWrapMode>
+        public partial class HorizontalOverflow : TextAttribute<UnityEngine.HorizontalWrapMode>
         {
             public HorizontalOverflow(UnityEngine.HorizontalWrapMode value): base("horizontalOverflow", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -118,7 +105,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class VerticalOverflow : TextAttribute<UnityEngine.VerticalWrapMode>
+        public partial class VerticalOverflow : TextAttribute<UnityEngine.VerticalWrapMode>
         {
             public VerticalOverflow(UnityEngine.VerticalWrapMode value): base("verticalOverflow", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -127,7 +114,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class LineSpacing : TextAttribute<System.Single>
+        public partial class LineSpacing : TextAttribute<System.Single>
         {
             public LineSpacing(System.Single value): base("lineSpacing", value) {}
             protected override void Apply(UnityEngine.UI.Text component)
@@ -136,7 +123,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class FontStyle : TextAttribute<UnityEngine.FontStyle>
+        public partial class FontStyle : TextAttribute<UnityEngine.FontStyle>
         {
             public FontStyle(UnityEngine.FontStyle value): base("fontStyle", value) {}
             protected override void Apply(UnityEngine.UI.Text component)

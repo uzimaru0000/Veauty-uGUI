@@ -11,18 +11,11 @@ namespace Veauty.uGUI
         protected CanvasScalerAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class CanvasScaler : GUIBase<UnityEngine.UI.CanvasScaler>
+    public partial class CanvasScaler : GUIBase<UnityEngine.UI.CanvasScaler>
     {
         public CanvasScaler(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class UiScaleMode : CanvasScalerAttribute<UnityEngine.UI.CanvasScaler.ScaleMode>
+        public partial class UiScaleMode : CanvasScalerAttribute<UnityEngine.UI.CanvasScaler.ScaleMode>
         {
             public UiScaleMode(UnityEngine.UI.CanvasScaler.ScaleMode value): base("uiScaleMode", value) {}
             protected override void Apply(UnityEngine.UI.CanvasScaler component)
@@ -31,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ReferencePixelsPerUnit : CanvasScalerAttribute<System.Single>
+        public partial class ReferencePixelsPerUnit : CanvasScalerAttribute<System.Single>
         {
             public ReferencePixelsPerUnit(System.Single value): base("referencePixelsPerUnit", value) {}
             protected override void Apply(UnityEngine.UI.CanvasScaler component)
@@ -40,7 +33,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ScaleFactor : CanvasScalerAttribute<System.Single>
+        public partial class ScaleFactor : CanvasScalerAttribute<System.Single>
         {
             public ScaleFactor(System.Single value): base("scaleFactor", value) {}
             protected override void Apply(UnityEngine.UI.CanvasScaler component)
@@ -49,7 +42,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ReferenceResolution : CanvasScalerAttribute<UnityEngine.Vector2>
+        public partial class ReferenceResolution : CanvasScalerAttribute<UnityEngine.Vector2>
         {
             public ReferenceResolution(UnityEngine.Vector2 value): base("referenceResolution", value) {}
             protected override void Apply(UnityEngine.UI.CanvasScaler component)
@@ -58,7 +51,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ScreenMatchMode : CanvasScalerAttribute<UnityEngine.UI.CanvasScaler.ScreenMatchMode>
+        public partial class ScreenMatchMode : CanvasScalerAttribute<UnityEngine.UI.CanvasScaler.ScreenMatchMode>
         {
             public ScreenMatchMode(UnityEngine.UI.CanvasScaler.ScreenMatchMode value): base("screenMatchMode", value) {}
             protected override void Apply(UnityEngine.UI.CanvasScaler component)
@@ -67,7 +60,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class MatchWidthOrHeight : CanvasScalerAttribute<System.Single>
+        public partial class MatchWidthOrHeight : CanvasScalerAttribute<System.Single>
         {
             public MatchWidthOrHeight(System.Single value): base("matchWidthOrHeight", value) {}
             protected override void Apply(UnityEngine.UI.CanvasScaler component)
@@ -76,7 +69,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class PhysicalUnit : CanvasScalerAttribute<UnityEngine.UI.CanvasScaler.Unit>
+        public partial class PhysicalUnit : CanvasScalerAttribute<UnityEngine.UI.CanvasScaler.Unit>
         {
             public PhysicalUnit(UnityEngine.UI.CanvasScaler.Unit value): base("physicalUnit", value) {}
             protected override void Apply(UnityEngine.UI.CanvasScaler component)
@@ -85,7 +78,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class FallbackScreenDPI : CanvasScalerAttribute<System.Single>
+        public partial class FallbackScreenDPI : CanvasScalerAttribute<System.Single>
         {
             public FallbackScreenDPI(System.Single value): base("fallbackScreenDPI", value) {}
             protected override void Apply(UnityEngine.UI.CanvasScaler component)
@@ -94,7 +87,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class DefaultSpriteDPI : CanvasScalerAttribute<System.Single>
+        public partial class DefaultSpriteDPI : CanvasScalerAttribute<System.Single>
         {
             public DefaultSpriteDPI(System.Single value): base("defaultSpriteDPI", value) {}
             protected override void Apply(UnityEngine.UI.CanvasScaler component)
@@ -103,7 +96,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class DynamicPixelsPerUnit : CanvasScalerAttribute<System.Single>
+        public partial class DynamicPixelsPerUnit : CanvasScalerAttribute<System.Single>
         {
             public DynamicPixelsPerUnit(System.Single value): base("dynamicPixelsPerUnit", value) {}
             protected override void Apply(UnityEngine.UI.CanvasScaler component)

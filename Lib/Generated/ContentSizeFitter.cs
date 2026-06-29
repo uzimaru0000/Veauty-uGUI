@@ -11,18 +11,11 @@ namespace Veauty.uGUI
         protected ContentSizeFitterAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class ContentSizeFitter : GUIBase<UnityEngine.UI.ContentSizeFitter>
+    public partial class ContentSizeFitter : GUIBase<UnityEngine.UI.ContentSizeFitter>
     {
         public ContentSizeFitter(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class HorizontalFit : ContentSizeFitterAttribute<UnityEngine.UI.ContentSizeFitter.FitMode>
+        public partial class HorizontalFit : ContentSizeFitterAttribute<UnityEngine.UI.ContentSizeFitter.FitMode>
         {
             public HorizontalFit(UnityEngine.UI.ContentSizeFitter.FitMode value): base("horizontalFit", value) {}
             protected override void Apply(UnityEngine.UI.ContentSizeFitter component)
@@ -31,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class VerticalFit : ContentSizeFitterAttribute<UnityEngine.UI.ContentSizeFitter.FitMode>
+        public partial class VerticalFit : ContentSizeFitterAttribute<UnityEngine.UI.ContentSizeFitter.FitMode>
         {
             public VerticalFit(UnityEngine.UI.ContentSizeFitter.FitMode value): base("verticalFit", value) {}
             protected override void Apply(UnityEngine.UI.ContentSizeFitter component)

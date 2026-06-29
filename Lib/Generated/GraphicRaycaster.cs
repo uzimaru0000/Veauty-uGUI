@@ -11,18 +11,11 @@ namespace Veauty.uGUI
         protected GraphicRaycasterAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class GraphicRaycaster : GUIBase<UnityEngine.UI.GraphicRaycaster>
+    public partial class GraphicRaycaster : GUIBase<UnityEngine.UI.GraphicRaycaster>
     {
         public GraphicRaycaster(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class IgnoreReversedGraphics : GraphicRaycasterAttribute<System.Boolean>
+        public partial class IgnoreReversedGraphics : GraphicRaycasterAttribute<System.Boolean>
         {
             public IgnoreReversedGraphics(System.Boolean value): base("ignoreReversedGraphics", value) {}
             protected override void Apply(UnityEngine.UI.GraphicRaycaster component)
@@ -31,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class BlockingObjects : GraphicRaycasterAttribute<UnityEngine.UI.GraphicRaycaster.BlockingObjects>
+        public partial class BlockingObjects : GraphicRaycasterAttribute<UnityEngine.UI.GraphicRaycaster.BlockingObjects>
         {
             public BlockingObjects(UnityEngine.UI.GraphicRaycaster.BlockingObjects value): base("blockingObjects", value) {}
             protected override void Apply(UnityEngine.UI.GraphicRaycaster component)
@@ -40,7 +33,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class BlockingMask : GraphicRaycasterAttribute<UnityEngine.LayerMask>
+        public partial class BlockingMask : GraphicRaycasterAttribute<UnityEngine.LayerMask>
         {
             public BlockingMask(UnityEngine.LayerMask value): base("blockingMask", value) {}
             protected override void Apply(UnityEngine.UI.GraphicRaycaster component)

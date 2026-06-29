@@ -11,18 +11,11 @@ namespace Veauty.uGUI
         protected ShadowAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class Shadow : GUIBase<UnityEngine.UI.Shadow>
+    public partial class Shadow : GUIBase<UnityEngine.UI.Shadow>
     {
         public Shadow(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class EffectColor : ShadowAttribute<UnityEngine.Color>
+        public partial class EffectColor : ShadowAttribute<UnityEngine.Color>
         {
             public EffectColor(UnityEngine.Color value): base("effectColor", value) {}
             protected override void Apply(UnityEngine.UI.Shadow component)
@@ -31,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class EffectDistance : ShadowAttribute<UnityEngine.Vector2>
+        public partial class EffectDistance : ShadowAttribute<UnityEngine.Vector2>
         {
             public EffectDistance(UnityEngine.Vector2 value): base("effectDistance", value) {}
             protected override void Apply(UnityEngine.UI.Shadow component)
@@ -40,7 +33,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class UseGraphicAlpha : ShadowAttribute<System.Boolean>
+        public partial class UseGraphicAlpha : ShadowAttribute<System.Boolean>
         {
             public UseGraphicAlpha(System.Boolean value): base("useGraphicAlpha", value) {}
             protected override void Apply(UnityEngine.UI.Shadow component)

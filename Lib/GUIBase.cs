@@ -3,11 +3,30 @@ using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
+    public interface ISubComponent { }
+
+    public struct ImageStyle
+    {
+        public UnityEngine.Sprite Sprite;
+        public UnityEngine.Color Color;
+        public UnityEngine.UI.Image.Type ImageType;
+
+        public void ApplyTo(UnityEngine.UI.Image image)
+        {
+            if (Sprite != null) image.sprite = Sprite;
+            image.color = Color;
+            image.type = ImageType;
+        }
+    }
+
     public abstract class GUIBase<T> : Widget<UnityEngine.GameObject> where T : UnityEngine.Component
     {
         protected GUIBase(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override IVTree Render() => new Node<UnityEngine.GameObject, T>(typeof(T).FullName, attrs, kids);
+        public override IVTree Render() => new Node<UnityEngine.GameObject, T>(typeof(T).FullName, attrs, GetKids());
+
+        public override UnityEngine.GameObject Init(UnityEngine.GameObject go) => go;
+        public override void Destroy(UnityEngine.GameObject go) { }
 
         protected static UnityEngine.GameObject CreateChild(UnityEngine.GameObject parent, string name)
         {
@@ -22,6 +41,39 @@ namespace Veauty.uGUI
             rt.anchorMin = UnityEngine.Vector2.zero;
             rt.anchorMax = UnityEngine.Vector2.one;
             rt.sizeDelta = UnityEngine.Vector2.zero;
+        }
+
+        protected static TComp AddVisual<TComp>(UnityEngine.GameObject go, UnityEngine.Color color)
+            where TComp : UnityEngine.UI.Graphic
+        {
+            go.AddComponent<UnityEngine.CanvasRenderer>();
+            var comp = go.AddComponent<TComp>();
+            comp.color = color;
+            return comp;
+        }
+
+        protected static void SetupRect(
+            UnityEngine.RectTransform rt,
+            UnityEngine.Vector2? anchorMin = null,
+            UnityEngine.Vector2? anchorMax = null,
+            UnityEngine.Vector2? pivot = null,
+            UnityEngine.Vector2? sizeDelta = null,
+            UnityEngine.Vector2? offsetMin = null,
+            UnityEngine.Vector2? offsetMax = null)
+        {
+            if (anchorMin.HasValue) rt.anchorMin = anchorMin.Value;
+            if (anchorMax.HasValue) rt.anchorMax = anchorMax.Value;
+            if (pivot.HasValue) rt.pivot = pivot.Value;
+            if (sizeDelta.HasValue) rt.sizeDelta = sizeDelta.Value;
+            if (offsetMin.HasValue) rt.offsetMin = offsetMin.Value;
+            if (offsetMax.HasValue) rt.offsetMax = offsetMax.Value;
+        }
+
+        protected T FindPart<T>() where T : class
+        {
+            foreach (var kid in this.kids)
+                if (kid is T part) return part;
+            return null;
         }
     }
 

@@ -11,51 +11,11 @@ namespace Veauty.uGUI
         protected InputFieldAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class InputField : GUIBase<UnityEngine.UI.InputField>
+    public partial class InputField : GUIBase<UnityEngine.UI.InputField>
     {
         public InputField(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            var input = go.GetComponent<UnityEngine.UI.InputField>();
-            var bgImage = go.GetComponent<UnityEngine.UI.Image>();
-            if (bgImage == null) { go.AddComponent<UnityEngine.CanvasRenderer>(); bgImage = go.AddComponent<UnityEngine.UI.Image>(); }
-            bgImage.color = new UnityEngine.Color(0.16f, 0.18f, 0.22f);
-            input.targetGraphic = bgImage;
-            var textArea = CreateChild(go, "Text Area");
-            var textAreaRect = textArea.GetComponent<UnityEngine.RectTransform>();
-            textAreaRect.anchorMin = UnityEngine.Vector2.zero;
-            textAreaRect.anchorMax = UnityEngine.Vector2.one;
-            textAreaRect.offsetMin = new UnityEngine.Vector2(10f, 2f);
-            textAreaRect.offsetMax = new UnityEngine.Vector2(-10f, -2f);
-            textArea.AddComponent<UnityEngine.UI.RectMask2D>();
-            var ph = CreateChild(textArea, "Placeholder");
-            ph.AddComponent<UnityEngine.CanvasRenderer>();
-            var phText = ph.AddComponent<UnityEngine.UI.Text>();
-            phText.text = "Enter text...";
-            phText.fontStyle = UnityEngine.FontStyle.Italic;
-            phText.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f, 0.75f);
-            phText.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>("LegacyRuntime.ttf");
-            phText.fontSize = 16;
-            phText.alignment = UnityEngine.TextAnchor.MiddleLeft;
-            Stretch(ph.GetComponent<UnityEngine.RectTransform>());
-            input.placeholder = phText;
-            var txt = CreateChild(textArea, "Text");
-            txt.AddComponent<UnityEngine.CanvasRenderer>();
-            var textComp = txt.AddComponent<UnityEngine.UI.Text>();
-            textComp.color = UnityEngine.Color.white;
-            textComp.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>("LegacyRuntime.ttf");
-            textComp.fontSize = 16;
-            textComp.alignment = UnityEngine.TextAnchor.MiddleLeft;
-            textComp.supportRichText = false;
-            Stretch(txt.GetComponent<UnityEngine.RectTransform>());
-            input.textComponent = textComp;
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class ShouldHideMobileInput : InputFieldAttribute<System.Boolean>
+        public partial class ShouldHideMobileInput : InputFieldAttribute<System.Boolean>
         {
             public ShouldHideMobileInput(System.Boolean value): base("shouldHideMobileInput", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -64,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ShouldActivateOnSelect : InputFieldAttribute<System.Boolean>
+        public partial class ShouldActivateOnSelect : InputFieldAttribute<System.Boolean>
         {
             public ShouldActivateOnSelect(System.Boolean value): base("shouldActivateOnSelect", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -73,7 +33,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Text : InputFieldAttribute<System.String>
+        public partial class Text : InputFieldAttribute<System.String>
         {
             public Text(System.String value): base("text", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -82,7 +42,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class CaretBlinkRate : InputFieldAttribute<System.Single>
+        public partial class CaretBlinkRate : InputFieldAttribute<System.Single>
         {
             public CaretBlinkRate(System.Single value): base("caretBlinkRate", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -91,7 +51,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class CaretWidth : InputFieldAttribute<System.Int32>
+        public partial class CaretWidth : InputFieldAttribute<System.Int32>
         {
             public CaretWidth(System.Int32 value): base("caretWidth", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -100,7 +60,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class TextComponent : InputFieldAttribute<UnityEngine.UI.Text>
+        public partial class TextComponent : InputFieldAttribute<UnityEngine.UI.Text>
         {
             public TextComponent(UnityEngine.UI.Text value): base("textComponent", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -109,7 +69,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Placeholder : InputFieldAttribute<UnityEngine.UI.Graphic>
+        public partial class Placeholder : InputFieldAttribute<UnityEngine.UI.Graphic>
         {
             public Placeholder(UnityEngine.UI.Graphic value): base("placeholder", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -118,7 +78,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class CaretColor : InputFieldAttribute<UnityEngine.Color>
+        public partial class CaretColor : InputFieldAttribute<UnityEngine.Color>
         {
             public CaretColor(UnityEngine.Color value): base("caretColor", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -127,7 +87,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class CustomCaretColor : InputFieldAttribute<System.Boolean>
+        public partial class CustomCaretColor : InputFieldAttribute<System.Boolean>
         {
             public CustomCaretColor(System.Boolean value): base("customCaretColor", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -136,7 +96,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class SelectionColor : InputFieldAttribute<UnityEngine.Color>
+        public partial class SelectionColor : InputFieldAttribute<UnityEngine.Color>
         {
             public SelectionColor(UnityEngine.Color value): base("selectionColor", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -145,7 +105,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class OnEndEdit : InputFieldAttribute<UnityEngine.UI.InputField.EndEditEvent>
+        public partial class OnEndEdit : InputFieldAttribute<UnityEngine.UI.InputField.EndEditEvent>
         {
             public OnEndEdit(UnityEngine.UI.InputField.EndEditEvent value): base("onEndEdit", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -154,7 +114,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class OnSubmit : InputFieldAttribute<UnityEngine.UI.InputField.SubmitEvent>
+        public partial class OnSubmit : InputFieldAttribute<UnityEngine.UI.InputField.SubmitEvent>
         {
             public OnSubmit(UnityEngine.UI.InputField.SubmitEvent value): base("onSubmit", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -163,7 +123,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class OnValueChanged : InputFieldAttribute<UnityEngine.UI.InputField.OnChangeEvent>
+        public partial class OnValueChanged : InputFieldAttribute<UnityEngine.UI.InputField.OnChangeEvent>
         {
             public OnValueChanged(UnityEngine.UI.InputField.OnChangeEvent value): base("onValueChanged", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -172,7 +132,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class OnValidateInput : InputFieldAttribute<UnityEngine.UI.InputField.OnValidateInput>
+        public partial class OnValidateInput : InputFieldAttribute<UnityEngine.UI.InputField.OnValidateInput>
         {
             public OnValidateInput(UnityEngine.UI.InputField.OnValidateInput value): base("onValidateInput", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -181,7 +141,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class CharacterLimit : InputFieldAttribute<System.Int32>
+        public partial class CharacterLimit : InputFieldAttribute<System.Int32>
         {
             public CharacterLimit(System.Int32 value): base("characterLimit", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -190,7 +150,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ContentType : InputFieldAttribute<UnityEngine.UI.InputField.ContentType>
+        public partial class ContentType : InputFieldAttribute<UnityEngine.UI.InputField.ContentType>
         {
             public ContentType(UnityEngine.UI.InputField.ContentType value): base("contentType", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -199,7 +159,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class LineType : InputFieldAttribute<UnityEngine.UI.InputField.LineType>
+        public partial class LineType : InputFieldAttribute<UnityEngine.UI.InputField.LineType>
         {
             public LineType(UnityEngine.UI.InputField.LineType value): base("lineType", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -208,7 +168,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class InputType : InputFieldAttribute<UnityEngine.UI.InputField.InputType>
+        public partial class InputType : InputFieldAttribute<UnityEngine.UI.InputField.InputType>
         {
             public InputType(UnityEngine.UI.InputField.InputType value): base("inputType", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -217,7 +177,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class KeyboardType : InputFieldAttribute<UnityEngine.TouchScreenKeyboardType>
+        public partial class KeyboardType : InputFieldAttribute<UnityEngine.TouchScreenKeyboardType>
         {
             public KeyboardType(UnityEngine.TouchScreenKeyboardType value): base("keyboardType", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -226,7 +186,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class CharacterValidation : InputFieldAttribute<UnityEngine.UI.InputField.CharacterValidation>
+        public partial class CharacterValidation : InputFieldAttribute<UnityEngine.UI.InputField.CharacterValidation>
         {
             public CharacterValidation(UnityEngine.UI.InputField.CharacterValidation value): base("characterValidation", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -235,7 +195,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class ReadOnly : InputFieldAttribute<System.Boolean>
+        public partial class ReadOnly : InputFieldAttribute<System.Boolean>
         {
             public ReadOnly(System.Boolean value): base("readOnly", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -244,7 +204,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class AsteriskChar : InputFieldAttribute<System.Char>
+        public partial class AsteriskChar : InputFieldAttribute<System.Char>
         {
             public AsteriskChar(System.Char value): base("asteriskChar", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -253,7 +213,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class CaretPosition : InputFieldAttribute<System.Int32>
+        public partial class CaretPosition : InputFieldAttribute<System.Int32>
         {
             public CaretPosition(System.Int32 value): base("caretPosition", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -262,7 +222,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class SelectionAnchorPosition : InputFieldAttribute<System.Int32>
+        public partial class SelectionAnchorPosition : InputFieldAttribute<System.Int32>
         {
             public SelectionAnchorPosition(System.Int32 value): base("selectionAnchorPosition", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
@@ -271,7 +231,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class SelectionFocusPosition : InputFieldAttribute<System.Int32>
+        public partial class SelectionFocusPosition : InputFieldAttribute<System.Int32>
         {
             public SelectionFocusPosition(System.Int32 value): base("selectionFocusPosition", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)

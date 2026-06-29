@@ -11,18 +11,11 @@ namespace Veauty.uGUI
         protected ToggleGroupAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class ToggleGroup : GUIBase<UnityEngine.UI.ToggleGroup>
+    public partial class ToggleGroup : GUIBase<UnityEngine.UI.ToggleGroup>
     {
         public ToggleGroup(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class AllowSwitchOff : ToggleGroupAttribute<System.Boolean>
+        public partial class AllowSwitchOff : ToggleGroupAttribute<System.Boolean>
         {
             public AllowSwitchOff(System.Boolean value): base("allowSwitchOff", value) {}
             protected override void Apply(UnityEngine.UI.ToggleGroup component)

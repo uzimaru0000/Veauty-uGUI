@@ -11,16 +11,9 @@ namespace Veauty.uGUI
         protected PositionAsUV1Attribute(string key, T value) : base(key, value) { }
     }
 
-    public class PositionAsUV1 : GUIBase<UnityEngine.UI.PositionAsUV1>
+    public partial class PositionAsUV1 : GUIBase<UnityEngine.UI.PositionAsUV1>
     {
         public PositionAsUV1(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
-
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
 
     }
 }

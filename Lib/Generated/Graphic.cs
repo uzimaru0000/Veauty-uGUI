@@ -11,18 +11,11 @@ namespace Veauty.uGUI
         protected GraphicAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class Graphic : GUIBase<UnityEngine.UI.Graphic>
+    public partial class Graphic : GUIBase<UnityEngine.UI.Graphic>
     {
         public Graphic(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {
-            return go;
-        }
-        public override void Destroy(UnityEngine.GameObject go) { }
-
-
-        public class Color : GraphicAttribute<UnityEngine.Color>
+        public partial class Color : GraphicAttribute<UnityEngine.Color>
         {
             public Color(UnityEngine.Color value): base("color", value) {}
             protected override void Apply(UnityEngine.UI.Graphic component)
@@ -31,7 +24,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class RaycastTarget : GraphicAttribute<System.Boolean>
+        public partial class RaycastTarget : GraphicAttribute<System.Boolean>
         {
             public RaycastTarget(System.Boolean value): base("raycastTarget", value) {}
             protected override void Apply(UnityEngine.UI.Graphic component)
@@ -40,7 +33,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class RaycastPadding : GraphicAttribute<UnityEngine.Vector4>
+        public partial class RaycastPadding : GraphicAttribute<UnityEngine.Vector4>
         {
             public RaycastPadding(UnityEngine.Vector4 value): base("raycastPadding", value) {}
             protected override void Apply(UnityEngine.UI.Graphic component)
@@ -49,7 +42,7 @@ namespace Veauty.uGUI
             }
         }
 
-        public class Material : GraphicAttribute<UnityEngine.Material>
+        public partial class Material : GraphicAttribute<UnityEngine.Material>
         {
             public Material(UnityEngine.Material value): base("material", value) {}
             protected override void Apply(UnityEngine.UI.Graphic component)
