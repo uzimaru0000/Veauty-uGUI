@@ -2,7 +2,7 @@
   "name": "com.uzimaru.veauty-ugui",
   "displayName": "Veauty-uGUI",
   "version": "0.4.0",
-  "unity": "2020.3",
+  "unity": "6000.5",
   "description": "Veauty widget and attributes",
   "keywords": ["Library", "Virtual-Dom", "VDOM", "uGUI"],
   "category": "Library",
