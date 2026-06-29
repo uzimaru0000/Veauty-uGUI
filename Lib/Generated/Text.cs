@@ -1,12 +1,8 @@
 
 // THIS CODE IS AUTO GENERATED
 
-using UnityEngine;
-using UnityEngine.Events;
-using Veauty.GameObject.Attributes;
-using UI = UnityEngine.UI;
-using Veauty.VTree;
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -31,15 +27,6 @@ namespace Veauty.uGUI
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
-        public class Font : TextAttribute<UnityEngine.Font>
-        {
-            public Font(UnityEngine.Font value): base("font", value) {}
-            protected override void Apply(UnityEngine.UI.Text component)
-            {
-                component.font = this.GetValue();
-            }
-        }
 
         public class Value : TextAttribute<System.String>
         {
@@ -47,6 +34,15 @@ namespace Veauty.uGUI
             protected override void Apply(UnityEngine.UI.Text component)
             {
                 component.text = this.GetValue();
+            }
+        }
+
+        public class Font : TextAttribute<UnityEngine.Font>
+        {
+            public Font(UnityEngine.Font value): base("font", value) {}
+            protected override void Apply(UnityEngine.UI.Text component)
+            {
+                component.font = this.GetValue();
             }
         }
 
@@ -148,6 +144,5 @@ namespace Veauty.uGUI
                 component.fontStyle = this.GetValue();
             }
         }
-
     }
 }

@@ -1,12 +1,8 @@
 
 // THIS CODE IS AUTO GENERATED
 
-using UnityEngine;
-using UnityEngine.Events;
-using Veauty.GameObject.Attributes;
-using UI = UnityEngine.UI;
-using Veauty.VTree;
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -21,11 +17,44 @@ namespace Veauty.uGUI
 
         public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
         {
+            var input = go.GetComponent<UnityEngine.UI.InputField>();
+            var bgImage = go.GetComponent<UnityEngine.UI.Image>();
+            if (bgImage == null) { go.AddComponent<UnityEngine.CanvasRenderer>(); bgImage = go.AddComponent<UnityEngine.UI.Image>(); }
+            bgImage.color = new UnityEngine.Color(0.16f, 0.18f, 0.22f);
+            input.targetGraphic = bgImage;
+            var textArea = CreateChild(go, "Text Area");
+            var textAreaRect = textArea.GetComponent<UnityEngine.RectTransform>();
+            textAreaRect.anchorMin = UnityEngine.Vector2.zero;
+            textAreaRect.anchorMax = UnityEngine.Vector2.one;
+            textAreaRect.offsetMin = new UnityEngine.Vector2(10f, 2f);
+            textAreaRect.offsetMax = new UnityEngine.Vector2(-10f, -2f);
+            textArea.AddComponent<UnityEngine.UI.RectMask2D>();
+            var ph = CreateChild(textArea, "Placeholder");
+            ph.AddComponent<UnityEngine.CanvasRenderer>();
+            var phText = ph.AddComponent<UnityEngine.UI.Text>();
+            phText.text = "Enter text...";
+            phText.fontStyle = UnityEngine.FontStyle.Italic;
+            phText.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f, 0.75f);
+            phText.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>("LegacyRuntime.ttf");
+            phText.fontSize = 16;
+            phText.alignment = UnityEngine.TextAnchor.MiddleLeft;
+            Stretch(ph.GetComponent<UnityEngine.RectTransform>());
+            input.placeholder = phText;
+            var txt = CreateChild(textArea, "Text");
+            txt.AddComponent<UnityEngine.CanvasRenderer>();
+            var textComp = txt.AddComponent<UnityEngine.UI.Text>();
+            textComp.color = UnityEngine.Color.white;
+            textComp.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>("LegacyRuntime.ttf");
+            textComp.fontSize = 16;
+            textComp.alignment = UnityEngine.TextAnchor.MiddleLeft;
+            textComp.supportRichText = false;
+            Stretch(txt.GetComponent<UnityEngine.RectTransform>());
+            input.textComponent = textComp;
             return go;
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
+
         public class ShouldHideMobileInput : InputFieldAttribute<System.Boolean>
         {
             public ShouldHideMobileInput(System.Boolean value): base("shouldHideMobileInput", value) {}
@@ -125,12 +154,12 @@ namespace Veauty.uGUI
             }
         }
 
-        public class OnValueChange : InputFieldAttribute<UnityEngine.UI.InputField.OnChangeEvent>
+        public class OnSubmit : InputFieldAttribute<UnityEngine.UI.InputField.SubmitEvent>
         {
-            public OnValueChange(UnityEngine.UI.InputField.OnChangeEvent value): base("onValueChange", value) {}
+            public OnSubmit(UnityEngine.UI.InputField.SubmitEvent value): base("onSubmit", value) {}
             protected override void Apply(UnityEngine.UI.InputField component)
             {
-                component.onValueChanged = this.GetValue();
+                component.onSubmit = this.GetValue();
             }
         }
 
@@ -250,6 +279,5 @@ namespace Veauty.uGUI
                 component.selectionFocusPosition = this.GetValue();
             }
         }
-
     }
 }

@@ -1,12 +1,8 @@
 
 // THIS CODE IS AUTO GENERATED
 
-using UnityEngine;
-using UnityEngine.Events;
-using Veauty.GameObject.Attributes;
-using UI = UnityEngine.UI;
-using Veauty.VTree;
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -25,7 +21,7 @@ namespace Veauty.uGUI
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
+
         public class OnCullStateChanged : MaskableGraphicAttribute<UnityEngine.UI.MaskableGraphic.CullStateChangedEvent>
         {
             public OnCullStateChanged(UnityEngine.UI.MaskableGraphic.CullStateChangedEvent value): base("onCullStateChanged", value) {}
@@ -52,6 +48,5 @@ namespace Veauty.uGUI
                 component.isMaskingGraphic = this.GetValue();
             }
         }
-
     }
 }

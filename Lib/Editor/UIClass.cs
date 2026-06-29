@@ -17,6 +17,12 @@ public class UIClass : MonoBehaviour
         typeof(RectTransform)
     };
 
+    private static readonly HashSet<string> ManualTypes = new HashSet<string> {
+        nameof(Canvas),
+        nameof(CanvasGroup),
+        nameof(RectTransform)
+    };
+
     private static readonly HashSet<string> PartialTypes = new HashSet<string> {
         nameof(GridLayoutGroup),
         nameof(HorizontalLayoutGroup),
@@ -29,6 +35,7 @@ public class UIClass : MonoBehaviour
         Directory.CreateDirectory(GeneratedDirectory);
 
         GetTargetTypes()
+            .Where(type => !ManualTypes.Contains(type.Name))
             .ToList()
             .ForEach(type => {
                 var properties = GetWritableProperties(type);
@@ -58,7 +65,8 @@ public class UIClass : MonoBehaviour
         return type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
             .Where(property => property.SetMethod != null && property.SetMethod.IsPublic)
             .Where(property => property.GetIndexParameters().Length == 0)
-            .Where(property => !IsObsolete(property));
+            .Where(property => !IsObsolete(property))
+            .Where(property => ToPascalCase(property.Name) != type.Name);
     }
 
     private static bool IsObsolete(PropertyInfo property)
@@ -131,6 +139,223 @@ namespace Veauty.uGUI
                 text.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>(""LegacyRuntime.ttf"");
             }
 
+            return go;
+        }";
+        }
+
+        if (uGUIType == typeof(Toggle))
+        {
+            return @"public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
+        {
+            var toggle = go.GetComponent<UnityEngine.UI.Toggle>();
+            var bg = CreateChild(go, ""Background"");
+            bg.AddComponent<UnityEngine.CanvasRenderer>();
+            var bgImage = bg.AddComponent<UnityEngine.UI.Image>();
+            bgImage.color = new UnityEngine.Color(0.22f, 0.24f, 0.28f);
+            var bgRect = bg.GetComponent<UnityEngine.RectTransform>();
+            bgRect.anchorMin = new UnityEngine.Vector2(0f, 0.1f);
+            bgRect.anchorMax = new UnityEngine.Vector2(0f, 0.9f);
+            bgRect.pivot = new UnityEngine.Vector2(0f, 0.5f);
+            bgRect.sizeDelta = new UnityEngine.Vector2(24f, 0f);
+            toggle.targetGraphic = bgImage;
+            var cm = CreateChild(bg, ""Checkmark"");
+            cm.AddComponent<UnityEngine.CanvasRenderer>();
+            var cmImage = cm.AddComponent<UnityEngine.UI.Image>();
+            cmImage.color = new UnityEngine.Color(0.2f, 0.75f, 0.4f);
+            var cmRect = cm.GetComponent<UnityEngine.RectTransform>();
+            cmRect.anchorMin = new UnityEngine.Vector2(0.15f, 0.15f);
+            cmRect.anchorMax = new UnityEngine.Vector2(0.85f, 0.85f);
+            cmRect.sizeDelta = UnityEngine.Vector2.zero;
+            toggle.graphic = cmImage;
+            return go;
+        }";
+        }
+
+        if (uGUIType == typeof(Slider))
+        {
+            return @"public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
+        {
+            var slider = go.GetComponent<UnityEngine.UI.Slider>();
+            var bg = CreateChild(go, ""Background"");
+            bg.AddComponent<UnityEngine.CanvasRenderer>();
+            var bgImage = bg.AddComponent<UnityEngine.UI.Image>();
+            bgImage.color = new UnityEngine.Color(0.22f, 0.24f, 0.28f);
+            Stretch(bg.GetComponent<UnityEngine.RectTransform>());
+            var fillArea = CreateChild(go, ""Fill Area"");
+            var fillAreaRect = fillArea.GetComponent<UnityEngine.RectTransform>();
+            fillAreaRect.anchorMin = new UnityEngine.Vector2(0f, 0.25f);
+            fillAreaRect.anchorMax = new UnityEngine.Vector2(1f, 0.75f);
+            fillAreaRect.offsetMin = new UnityEngine.Vector2(5f, 0f);
+            fillAreaRect.offsetMax = new UnityEngine.Vector2(-5f, 0f);
+            var fill = CreateChild(fillArea, ""Fill"");
+            fill.AddComponent<UnityEngine.CanvasRenderer>();
+            var fillImage = fill.AddComponent<UnityEngine.UI.Image>();
+            fillImage.color = new UnityEngine.Color(0.22f, 0.55f, 0.95f);
+            fill.GetComponent<UnityEngine.RectTransform>().sizeDelta = UnityEngine.Vector2.zero;
+            slider.fillRect = fill.GetComponent<UnityEngine.RectTransform>();
+            var handleArea = CreateChild(go, ""Handle Slide Area"");
+            var handleAreaRect = handleArea.GetComponent<UnityEngine.RectTransform>();
+            handleAreaRect.anchorMin = UnityEngine.Vector2.zero;
+            handleAreaRect.anchorMax = UnityEngine.Vector2.one;
+            handleAreaRect.offsetMin = new UnityEngine.Vector2(10f, 0f);
+            handleAreaRect.offsetMax = new UnityEngine.Vector2(-10f, 0f);
+            var handle = CreateChild(handleArea, ""Handle"");
+            handle.AddComponent<UnityEngine.CanvasRenderer>();
+            var handleImage = handle.AddComponent<UnityEngine.UI.Image>();
+            handleImage.color = UnityEngine.Color.white;
+            handle.GetComponent<UnityEngine.RectTransform>().sizeDelta = new UnityEngine.Vector2(20f, 0f);
+            slider.handleRect = handle.GetComponent<UnityEngine.RectTransform>();
+            slider.targetGraphic = handleImage;
+            return go;
+        }";
+        }
+
+        if (uGUIType == typeof(Scrollbar))
+        {
+            return @"public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
+        {
+            var scrollbar = go.GetComponent<UnityEngine.UI.Scrollbar>();
+            var bgImage = go.GetComponent<UnityEngine.UI.Image>();
+            if (bgImage == null) { go.AddComponent<UnityEngine.CanvasRenderer>(); bgImage = go.AddComponent<UnityEngine.UI.Image>(); }
+            bgImage.color = new UnityEngine.Color(0.22f, 0.24f, 0.28f);
+            var slideArea = CreateChild(go, ""Sliding Area"");
+            Stretch(slideArea.GetComponent<UnityEngine.RectTransform>());
+            var handle = CreateChild(slideArea, ""Handle"");
+            handle.AddComponent<UnityEngine.CanvasRenderer>();
+            var handleImage = handle.AddComponent<UnityEngine.UI.Image>();
+            handleImage.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f);
+            handle.GetComponent<UnityEngine.RectTransform>().sizeDelta = UnityEngine.Vector2.zero;
+            scrollbar.handleRect = handle.GetComponent<UnityEngine.RectTransform>();
+            scrollbar.targetGraphic = handleImage;
+            return go;
+        }";
+        }
+
+        if (uGUIType == typeof(InputField))
+        {
+            return @"public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
+        {
+            var input = go.GetComponent<UnityEngine.UI.InputField>();
+            var bgImage = go.GetComponent<UnityEngine.UI.Image>();
+            if (bgImage == null) { go.AddComponent<UnityEngine.CanvasRenderer>(); bgImage = go.AddComponent<UnityEngine.UI.Image>(); }
+            bgImage.color = new UnityEngine.Color(0.16f, 0.18f, 0.22f);
+            input.targetGraphic = bgImage;
+            var textArea = CreateChild(go, ""Text Area"");
+            var textAreaRect = textArea.GetComponent<UnityEngine.RectTransform>();
+            textAreaRect.anchorMin = UnityEngine.Vector2.zero;
+            textAreaRect.anchorMax = UnityEngine.Vector2.one;
+            textAreaRect.offsetMin = new UnityEngine.Vector2(10f, 2f);
+            textAreaRect.offsetMax = new UnityEngine.Vector2(-10f, -2f);
+            textArea.AddComponent<UnityEngine.UI.RectMask2D>();
+            var ph = CreateChild(textArea, ""Placeholder"");
+            ph.AddComponent<UnityEngine.CanvasRenderer>();
+            var phText = ph.AddComponent<UnityEngine.UI.Text>();
+            phText.text = ""Enter text..."";
+            phText.fontStyle = UnityEngine.FontStyle.Italic;
+            phText.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f, 0.75f);
+            phText.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>(""LegacyRuntime.ttf"");
+            phText.fontSize = 16;
+            phText.alignment = UnityEngine.TextAnchor.MiddleLeft;
+            Stretch(ph.GetComponent<UnityEngine.RectTransform>());
+            input.placeholder = phText;
+            var txt = CreateChild(textArea, ""Text"");
+            txt.AddComponent<UnityEngine.CanvasRenderer>();
+            var textComp = txt.AddComponent<UnityEngine.UI.Text>();
+            textComp.color = UnityEngine.Color.white;
+            textComp.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>(""LegacyRuntime.ttf"");
+            textComp.fontSize = 16;
+            textComp.alignment = UnityEngine.TextAnchor.MiddleLeft;
+            textComp.supportRichText = false;
+            Stretch(txt.GetComponent<UnityEngine.RectTransform>());
+            input.textComponent = textComp;
+            return go;
+        }";
+        }
+
+        if (uGUIType == typeof(Dropdown))
+        {
+            return @"public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
+        {
+            var dropdown = go.GetComponent<UnityEngine.UI.Dropdown>();
+            var bgImage = go.GetComponent<UnityEngine.UI.Image>();
+            if (bgImage == null) { go.AddComponent<UnityEngine.CanvasRenderer>(); bgImage = go.AddComponent<UnityEngine.UI.Image>(); }
+            bgImage.color = new UnityEngine.Color(0.22f, 0.24f, 0.28f);
+            dropdown.targetGraphic = bgImage;
+            var label = CreateChild(go, ""Label"");
+            label.AddComponent<UnityEngine.CanvasRenderer>();
+            var labelText = label.AddComponent<UnityEngine.UI.Text>();
+            labelText.alignment = UnityEngine.TextAnchor.MiddleLeft;
+            labelText.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>(""LegacyRuntime.ttf"");
+            labelText.fontSize = 16;
+            labelText.color = UnityEngine.Color.white;
+            var labelRect = label.GetComponent<UnityEngine.RectTransform>();
+            labelRect.anchorMin = UnityEngine.Vector2.zero;
+            labelRect.anchorMax = UnityEngine.Vector2.one;
+            labelRect.offsetMin = new UnityEngine.Vector2(10f, 0f);
+            labelRect.offsetMax = new UnityEngine.Vector2(-30f, 0f);
+            dropdown.captionText = labelText;
+            var arrow = CreateChild(go, ""Arrow"");
+            arrow.AddComponent<UnityEngine.CanvasRenderer>();
+            var arrowText = arrow.AddComponent<UnityEngine.UI.Text>();
+            arrowText.text = ""▼"";
+            arrowText.alignment = UnityEngine.TextAnchor.MiddleCenter;
+            arrowText.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>(""LegacyRuntime.ttf"");
+            arrowText.fontSize = 14;
+            arrowText.color = UnityEngine.Color.white;
+            var arrowRect = arrow.GetComponent<UnityEngine.RectTransform>();
+            arrowRect.anchorMin = new UnityEngine.Vector2(1f, 0f);
+            arrowRect.anchorMax = new UnityEngine.Vector2(1f, 1f);
+            arrowRect.pivot = new UnityEngine.Vector2(1f, 0.5f);
+            arrowRect.sizeDelta = new UnityEngine.Vector2(28f, 0f);
+            var template = CreateChild(go, ""Template"");
+            template.AddComponent<UnityEngine.CanvasRenderer>();
+            var templateImage = template.AddComponent<UnityEngine.UI.Image>();
+            templateImage.color = new UnityEngine.Color(0.16f, 0.18f, 0.22f);
+            var scrollRect = template.AddComponent<UnityEngine.UI.ScrollRect>();
+            scrollRect.horizontal = false;
+            scrollRect.movementType = UnityEngine.UI.ScrollRect.MovementType.Clamped;
+            var templateRect = template.GetComponent<UnityEngine.RectTransform>();
+            templateRect.anchorMin = new UnityEngine.Vector2(0f, 0f);
+            templateRect.anchorMax = new UnityEngine.Vector2(1f, 0f);
+            templateRect.pivot = new UnityEngine.Vector2(0.5f, 1f);
+            templateRect.sizeDelta = new UnityEngine.Vector2(0f, 150f);
+            var viewport = CreateChild(template, ""Viewport"");
+            viewport.AddComponent<UnityEngine.CanvasRenderer>();
+            viewport.AddComponent<UnityEngine.UI.Image>().color = new UnityEngine.Color(0f, 0f, 0f, 0f);
+            viewport.AddComponent<UnityEngine.UI.Mask>().showMaskGraphic = false;
+            Stretch(viewport.GetComponent<UnityEngine.RectTransform>());
+            scrollRect.viewport = viewport.GetComponent<UnityEngine.RectTransform>();
+            var content = CreateChild(viewport, ""Content"");
+            var contentRect = content.GetComponent<UnityEngine.RectTransform>();
+            contentRect.anchorMin = new UnityEngine.Vector2(0f, 1f);
+            contentRect.anchorMax = new UnityEngine.Vector2(1f, 1f);
+            contentRect.pivot = new UnityEngine.Vector2(0.5f, 1f);
+            contentRect.sizeDelta = new UnityEngine.Vector2(0f, 28f);
+            scrollRect.content = contentRect;
+            var item = CreateChild(content, ""Item"");
+            var itemToggle = item.AddComponent<UnityEngine.UI.Toggle>();
+            item.GetComponent<UnityEngine.RectTransform>().sizeDelta = new UnityEngine.Vector2(0f, 28f);
+            var itemBg = CreateChild(item, ""Item Background"");
+            itemBg.AddComponent<UnityEngine.CanvasRenderer>();
+            var itemBgImage = itemBg.AddComponent<UnityEngine.UI.Image>();
+            itemBgImage.color = new UnityEngine.Color(0.25f, 0.35f, 0.5f);
+            Stretch(itemBg.GetComponent<UnityEngine.RectTransform>());
+            itemToggle.targetGraphic = itemBgImage;
+            var itemLabel = CreateChild(item, ""Item Label"");
+            itemLabel.AddComponent<UnityEngine.CanvasRenderer>();
+            var itemLabelText = itemLabel.AddComponent<UnityEngine.UI.Text>();
+            itemLabelText.alignment = UnityEngine.TextAnchor.MiddleLeft;
+            itemLabelText.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>(""LegacyRuntime.ttf"");
+            itemLabelText.fontSize = 16;
+            itemLabelText.color = UnityEngine.Color.white;
+            var itemLabelRect = itemLabel.GetComponent<UnityEngine.RectTransform>();
+            itemLabelRect.anchorMin = UnityEngine.Vector2.zero;
+            itemLabelRect.anchorMax = UnityEngine.Vector2.one;
+            itemLabelRect.offsetMin = new UnityEngine.Vector2(10f, 0f);
+            itemLabelRect.sizeDelta = UnityEngine.Vector2.zero;
+            dropdown.itemText = itemLabelText;
+            dropdown.template = templateRect;
+            template.SetActive(false);
             return go;
         }";
         }

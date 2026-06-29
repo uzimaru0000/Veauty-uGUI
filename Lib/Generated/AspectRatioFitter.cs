@@ -2,6 +2,7 @@
 // THIS CODE IS AUTO GENERATED
 
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -20,7 +21,7 @@ namespace Veauty.uGUI
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
+
         public class AspectMode : AspectRatioFitterAttribute<UnityEngine.UI.AspectRatioFitter.AspectMode>
         {
             public AspectMode(UnityEngine.UI.AspectRatioFitter.AspectMode value): base("aspectMode", value) {}
@@ -38,6 +39,5 @@ namespace Veauty.uGUI
                 component.aspectRatio = this.GetValue();
             }
         }
-
     }
 }

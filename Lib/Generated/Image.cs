@@ -1,12 +1,8 @@
 
 // THIS CODE IS AUTO GENERATED
 
-using UnityEngine;
-using UnityEngine.Events;
-using Veauty.GameObject.Attributes;
-using UI = UnityEngine.UI;
-using Veauty.VTree;
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -25,7 +21,7 @@ namespace Veauty.uGUI
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
+
         public class Sprite : ImageAttribute<UnityEngine.Sprite>
         {
             public Sprite(UnityEngine.Sprite value): base("sprite", value) {}
@@ -107,15 +103,6 @@ namespace Veauty.uGUI
             }
         }
 
-        public class EventAlphaThreshold : ImageAttribute<System.Single>
-        {
-            public EventAlphaThreshold(System.Single value): base("eventAlphaThreshold", value) {}
-            protected override void Apply(UnityEngine.UI.Image component)
-            {
-                component.alphaHitTestMinimumThreshold = this.GetValue();
-            }
-        }
-
         public class AlphaHitTestMinimumThreshold : ImageAttribute<System.Single>
         {
             public AlphaHitTestMinimumThreshold(System.Single value): base("alphaHitTestMinimumThreshold", value) {}
@@ -151,6 +138,5 @@ namespace Veauty.uGUI
                 component.material = this.GetValue();
             }
         }
-
     }
 }

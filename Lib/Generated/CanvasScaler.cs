@@ -2,6 +2,7 @@
 // THIS CODE IS AUTO GENERATED
 
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -20,7 +21,7 @@ namespace Veauty.uGUI
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
+
         public class UiScaleMode : CanvasScalerAttribute<UnityEngine.UI.CanvasScaler.ScaleMode>
         {
             public UiScaleMode(UnityEngine.UI.CanvasScaler.ScaleMode value): base("uiScaleMode", value) {}
@@ -110,6 +111,5 @@ namespace Veauty.uGUI
                 component.dynamicPixelsPerUnit = this.GetValue();
             }
         }
-
     }
 }

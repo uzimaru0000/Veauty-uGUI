@@ -1,12 +1,8 @@
 
 // THIS CODE IS AUTO GENERATED
 
-using UnityEngine;
-using UnityEngine.Events;
-using Veauty.GameObject.Attributes;
-using UI = UnityEngine.UI;
-using Veauty.VTree;
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -25,7 +21,7 @@ namespace Veauty.uGUI
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
+
         public class ShowMaskGraphic : MaskAttribute<System.Boolean>
         {
             public ShowMaskGraphic(System.Boolean value): base("showMaskGraphic", value) {}
@@ -34,6 +30,5 @@ namespace Veauty.uGUI
                 component.showMaskGraphic = this.GetValue();
             }
         }
-
     }
 }

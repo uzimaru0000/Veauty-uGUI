@@ -2,6 +2,7 @@
 // THIS CODE IS AUTO GENERATED
 
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -28,7 +29,7 @@ namespace Veauty.uGUI
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
+
         public class OnClick : ButtonAttribute<UnityEngine.Events.UnityAction>
         {
             public OnClick(UnityEngine.Events.UnityAction value): base("onClick", value) {}
@@ -38,6 +39,5 @@ namespace Veauty.uGUI
                 component.onClick.AddListener(GetValue());
             }
         }
-
     }
 }

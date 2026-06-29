@@ -1,12 +1,8 @@
 
 // THIS CODE IS AUTO GENERATED
 
-using UnityEngine;
-using UnityEngine.Events;
-using Veauty.GameObject.Attributes;
-using UI = UnityEngine.UI;
-using Veauty.VTree;
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -25,7 +21,7 @@ namespace Veauty.uGUI
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
+
         public class StartCorner : GridLayoutGroupAttribute<UnityEngine.UI.GridLayoutGroup.Corner>
         {
             public StartCorner(UnityEngine.UI.GridLayoutGroup.Corner value): base("startCorner", value) {}
@@ -79,6 +75,5 @@ namespace Veauty.uGUI
                 component.constraintCount = this.GetValue();
             }
         }
-
     }
 }

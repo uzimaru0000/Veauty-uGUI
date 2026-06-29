@@ -1,12 +1,8 @@
 
 // THIS CODE IS AUTO GENERATED
 
-using UnityEngine;
-using UnityEngine.Events;
-using Veauty.GameObject.Attributes;
-using UI = UnityEngine.UI;
-using Veauty.VTree;
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -21,11 +17,24 @@ namespace Veauty.uGUI
 
         public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
         {
+            var scrollbar = go.GetComponent<UnityEngine.UI.Scrollbar>();
+            var bgImage = go.GetComponent<UnityEngine.UI.Image>();
+            if (bgImage == null) { go.AddComponent<UnityEngine.CanvasRenderer>(); bgImage = go.AddComponent<UnityEngine.UI.Image>(); }
+            bgImage.color = new UnityEngine.Color(0.22f, 0.24f, 0.28f);
+            var slideArea = CreateChild(go, "Sliding Area");
+            Stretch(slideArea.GetComponent<UnityEngine.RectTransform>());
+            var handle = CreateChild(slideArea, "Handle");
+            handle.AddComponent<UnityEngine.CanvasRenderer>();
+            var handleImage = handle.AddComponent<UnityEngine.UI.Image>();
+            handleImage.color = new UnityEngine.Color(0.5f, 0.5f, 0.5f);
+            handle.GetComponent<UnityEngine.RectTransform>().sizeDelta = UnityEngine.Vector2.zero;
+            scrollbar.handleRect = handle.GetComponent<UnityEngine.RectTransform>();
+            scrollbar.targetGraphic = handleImage;
             return go;
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
+
         public class HandleRect : ScrollbarAttribute<UnityEngine.RectTransform>
         {
             public HandleRect(UnityEngine.RectTransform value): base("handleRect", value) {}
@@ -79,6 +88,5 @@ namespace Veauty.uGUI
                 component.onValueChanged = this.GetValue();
             }
         }
-
     }
 }

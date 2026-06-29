@@ -8,6 +8,21 @@ namespace Veauty.uGUI
         protected GUIBase(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 
         public override IVTree Render() => new Node<UnityEngine.GameObject, T>(typeof(T).FullName, attrs, kids);
+
+        protected static UnityEngine.GameObject CreateChild(UnityEngine.GameObject parent, string name)
+        {
+            var child = new UnityEngine.GameObject(name);
+            child.AddComponent<UnityEngine.RectTransform>();
+            child.transform.SetParent(parent.transform, false);
+            return child;
+        }
+
+        protected static void Stretch(UnityEngine.RectTransform rt)
+        {
+            rt.anchorMin = UnityEngine.Vector2.zero;
+            rt.anchorMax = UnityEngine.Vector2.one;
+            rt.sizeDelta = UnityEngine.Vector2.zero;
+        }
     }
 
     public abstract class GuiAttributeBase<T1, T2> : Attribute<UnityEngine.GameObject, T2> where T1 : UnityEngine.Component

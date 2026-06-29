@@ -1,12 +1,8 @@
 
 // THIS CODE IS AUTO GENERATED
 
-using UnityEngine;
-using UnityEngine.Events;
-using Veauty.GameObject.Attributes;
-using UI = UnityEngine.UI;
-using Veauty.VTree;
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -25,14 +21,6 @@ namespace Veauty.uGUI
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        public class Color : RaycastReceiverAttribute<UnityEngine.Color>
-        {
-            public Color(UnityEngine.Color value): base("color", value) {}
-            protected override void Apply(UnityEngine.UI.RaycastReceiver component)
-            {
-                component.color = this.GetValue();
-            }
-        }
 
         public class Material : RaycastReceiverAttribute<UnityEngine.Material>
         {
@@ -40,6 +28,15 @@ namespace Veauty.uGUI
             protected override void Apply(UnityEngine.UI.RaycastReceiver component)
             {
                 component.material = this.GetValue();
+            }
+        }
+
+        public class Color : RaycastReceiverAttribute<UnityEngine.Color>
+        {
+            public Color(UnityEngine.Color value): base("color", value) {}
+            protected override void Apply(UnityEngine.UI.RaycastReceiver component)
+            {
+                component.color = this.GetValue();
             }
         }
     }

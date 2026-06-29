@@ -1,12 +1,8 @@
 
 // THIS CODE IS AUTO GENERATED
 
-using UnityEngine;
-using UnityEngine.Events;
-using Veauty.GameObject.Attributes;
-using UI = UnityEngine.UI;
-using Veauty.VTree;
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {
@@ -21,11 +17,42 @@ namespace Veauty.uGUI
 
         public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
         {
+            var slider = go.GetComponent<UnityEngine.UI.Slider>();
+            var bg = CreateChild(go, "Background");
+            bg.AddComponent<UnityEngine.CanvasRenderer>();
+            var bgImage = bg.AddComponent<UnityEngine.UI.Image>();
+            bgImage.color = new UnityEngine.Color(0.22f, 0.24f, 0.28f);
+            Stretch(bg.GetComponent<UnityEngine.RectTransform>());
+            var fillArea = CreateChild(go, "Fill Area");
+            var fillAreaRect = fillArea.GetComponent<UnityEngine.RectTransform>();
+            fillAreaRect.anchorMin = new UnityEngine.Vector2(0f, 0.25f);
+            fillAreaRect.anchorMax = new UnityEngine.Vector2(1f, 0.75f);
+            fillAreaRect.offsetMin = new UnityEngine.Vector2(5f, 0f);
+            fillAreaRect.offsetMax = new UnityEngine.Vector2(-5f, 0f);
+            var fill = CreateChild(fillArea, "Fill");
+            fill.AddComponent<UnityEngine.CanvasRenderer>();
+            var fillImage = fill.AddComponent<UnityEngine.UI.Image>();
+            fillImage.color = new UnityEngine.Color(0.22f, 0.55f, 0.95f);
+            fill.GetComponent<UnityEngine.RectTransform>().sizeDelta = UnityEngine.Vector2.zero;
+            slider.fillRect = fill.GetComponent<UnityEngine.RectTransform>();
+            var handleArea = CreateChild(go, "Handle Slide Area");
+            var handleAreaRect = handleArea.GetComponent<UnityEngine.RectTransform>();
+            handleAreaRect.anchorMin = UnityEngine.Vector2.zero;
+            handleAreaRect.anchorMax = UnityEngine.Vector2.one;
+            handleAreaRect.offsetMin = new UnityEngine.Vector2(10f, 0f);
+            handleAreaRect.offsetMax = new UnityEngine.Vector2(-10f, 0f);
+            var handle = CreateChild(handleArea, "Handle");
+            handle.AddComponent<UnityEngine.CanvasRenderer>();
+            var handleImage = handle.AddComponent<UnityEngine.UI.Image>();
+            handleImage.color = UnityEngine.Color.white;
+            handle.GetComponent<UnityEngine.RectTransform>().sizeDelta = new UnityEngine.Vector2(20f, 0f);
+            slider.handleRect = handle.GetComponent<UnityEngine.RectTransform>();
+            slider.targetGraphic = handleImage;
             return go;
         }
         public override void Destroy(UnityEngine.GameObject go) { }
 
-        
+
         public class FillRect : SliderAttribute<UnityEngine.RectTransform>
         {
             public FillRect(UnityEngine.RectTransform value): base("fillRect", value) {}
@@ -106,6 +133,5 @@ namespace Veauty.uGUI
                 component.onValueChanged = this.GetValue();
             }
         }
-
     }
 }
