@@ -15,7 +15,7 @@ namespace Veauty.uGUI
         protected HorizontalLayoutGroupAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class HorizontalLayoutGroup : GUIBase<UnityEngine.UI.HorizontalLayoutGroup>
+    public partial class HorizontalLayoutGroup : GUIBase<UnityEngine.UI.HorizontalLayoutGroup>
     {
         public HorizontalLayoutGroup(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 

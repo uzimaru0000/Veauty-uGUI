@@ -86,8 +86,62 @@ public class CounterPanel : MonoBehaviour
 - `GridLayoutGroup`
 - `LayoutElement`
 - `ContentSizeFitter`
+- `AspectRatioFitter`
+- `RectTransform`
+- `Canvas`
+- `CanvasGroup`
+- `RaycastReceiver`
 
 Most generated attributes map directly to the corresponding Unity UI component property.
+
+Layout attributes can be written on the concrete layout group:
+
+```csharp
+new VerticalLayoutGroup(
+    new IAttribute<GameObject>[] {
+        new VerticalLayoutGroup.Padding(new RectOffset(16, 16, 12, 12)),
+        new VerticalLayoutGroup.Spacing(8),
+        new VerticalLayoutGroup.ChildAlignment(TextAnchor.UpperLeft),
+        new VerticalLayoutGroup.ChildControlWidth(true),
+        new VerticalLayoutGroup.ChildForceExpandHeight(false)
+    },
+    new Text(new IAttribute<GameObject>[] {
+        new Text.Value("Hello"),
+        new LayoutElement.PreferredHeight(32)
+    })
+)
+```
+
+These component attributes automatically add the backing component when they are applied to another uGUI node:
+
+- `LayoutElement`
+- `ContentSizeFitter`
+- `AspectRatioFitter`
+- `CanvasGroup`
+- `Shadow`
+- `Outline`
+- `PositionAsUV1`
+
+`RectTransform` attributes cover anchors, pivot, offsets, size, and anchored position:
+
+```csharp
+new Image(new IAttribute<GameObject>[] {
+    new RectTransform.AnchorMin(new Vector2(0, 1)),
+    new RectTransform.AnchorMax(new Vector2(0, 1)),
+    new RectTransform.Pivot(new Vector2(0, 1)),
+    new RectTransform.AnchoredPosition(new Vector2(24, -24)),
+    new RectTransform.SizeDelta(new Vector2(120, 48))
+})
+```
+
+`Canvas` and `CanvasGroup` live in `UnityEngine`, so qualify names when the compiler cannot choose between Unity and Veauty types:
+
+```csharp
+new Veauty.uGUI.Canvas(new IAttribute<GameObject>[] {
+    new Veauty.uGUI.Canvas.RenderMode(RenderMode.ScreenSpaceOverlay),
+    new Veauty.uGUI.Canvas.SortingOrder(10)
+})
+```
 
 ## Notes
 

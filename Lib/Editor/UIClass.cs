@@ -1,49 +1,88 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIClass : MonoBehaviour
 {
-    [MenuItem("Veauty/GenerateUIClass")]
-    static void GenerateUIClass()
-    {
-        var assm = Assembly.GetAssembly(typeof(Button));
-        var types = assm.GetTypes()
-                        .Where(x => x.Namespace == "UnityEngine.UI")
-                        .Where(x => x.IsSubclassOf(typeof(MonoBehaviour)))
-                        .Where(x => x.Name != "DrowdownItem");
+    private const string GeneratedDirectory = "Packages/com.uzimaru.veauty-ugui/Lib/Generated";
 
-        types.ToList()
-             .ForEach(x => {
-                 var properties = x.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).Where(x => x.CanWrite);
-                 var code = GUIScriptTemplate(x, properties);
-                 CreateScript(x.Name, code);
-             });
-        
+    private static readonly Type[] ExtraTypes = {
+        typeof(Canvas),
+        typeof(CanvasGroup),
+        typeof(RectTransform)
+    };
+
+    private static readonly HashSet<string> PartialTypes = new HashSet<string> {
+        nameof(GridLayoutGroup),
+        nameof(HorizontalLayoutGroup),
+        nameof(VerticalLayoutGroup)
+    };
+
+    [MenuItem("Veauty/GenerateUIClass")]
+    private static void GenerateUIClass()
+    {
+        Directory.CreateDirectory(GeneratedDirectory);
+
+        GetTargetTypes()
+            .ToList()
+            .ForEach(type => {
+                var properties = GetWritableProperties(type);
+                var code = GUIScriptTemplate(type, properties);
+                CreateScript(type.Name, code);
+            });
+
         AssetDatabase.Refresh();
     }
 
-    static void CreateScript(string name, string code)
+    private static IEnumerable<Type> GetTargetTypes()
     {
-        var filePath = $"Packages/Veauty-uGUI/Lib/Generated/{name}.cs";
+        var uiAssembly = Assembly.GetAssembly(typeof(Button));
+        var uiTypes = uiAssembly.GetTypes()
+            .Where(type => type.Namespace == "UnityEngine.UI")
+            .Where(type => type.IsSubclassOf(typeof(MonoBehaviour)))
+            .Where(type => type.IsVisible);
 
-        System.IO.File.WriteAllText(filePath, code);
+        return uiTypes
+            .Concat(ExtraTypes)
+            .Distinct()
+            .OrderBy(type => type.Name);
     }
 
-    static string GUIScriptTemplate(System.Type uGUIType, IEnumerable<PropertyInfo> propertyTypes) =>
-        $@"
+    private static IEnumerable<PropertyInfo> GetWritableProperties(Type type)
+    {
+        return type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+            .Where(property => property.SetMethod != null && property.SetMethod.IsPublic)
+            .Where(property => property.GetIndexParameters().Length == 0)
+            .Where(property => !IsObsolete(property));
+    }
+
+    private static bool IsObsolete(PropertyInfo property)
+    {
+        return property.GetCustomAttribute<ObsoleteAttribute>() != null
+            || property.GetMethod?.GetCustomAttribute<ObsoleteAttribute>() != null
+            || property.SetMethod?.GetCustomAttribute<ObsoleteAttribute>() != null;
+    }
+
+    private static void CreateScript(string name, string code)
+    {
+        var filePath = Path.Combine(GeneratedDirectory, name + ".cs");
+        File.WriteAllText(filePath, code);
+    }
+
+    private static string GUIScriptTemplate(Type uGUIType, IEnumerable<PropertyInfo> propertyTypes)
+    {
+        var classModifier = PartialTypes.Contains(uGUIType.Name) ? "partial " : "";
+
+        return $@"
 // THIS CODE IS AUTO GENERATED
 
-using UnityEngine;
-using UnityEngine.Events;
-using Veauty.GameObject.Attributes;
-using UI = UnityEngine.UI;
-using Veauty.VTree;
 using System.Collections.Generic;
+using Veauty.VTree;
 
 namespace Veauty.uGUI
 {{
@@ -52,22 +91,98 @@ namespace Veauty.uGUI
         protected {uGUIType.Name}Attribute(string key, T value) : base(key, value) {{ }}
     }}
 
-    public class {uGUIType.Name} : GUIBase<{TypeString(uGUIType)}>
+    public {classModifier}class {uGUIType.Name} : GUIBase<{TypeString(uGUIType)}>
     {{
         public {uGUIType.Name}(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) {{ }}
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
-        {{
-            return go;
-        }}
+        {InitTemplate(uGUIType)}
         public override void Destroy(UnityEngine.GameObject go) {{ }}
 
-        {propertyTypes.Select(x => UIPropertyClassTemplate(uGUIType, x)).Aggregate("", (acc, x) => acc + $"{x}\n")}
+{PropertyClassesTemplate(uGUIType, propertyTypes)}
     }}
 }}";
+    }
 
-    static string UIPropertyClassTemplate(System.Type baseClass, PropertyInfo property) =>
-        $@"
+    private static string InitTemplate(Type uGUIType)
+    {
+        if (uGUIType == typeof(Button))
+        {
+            return @"public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
+        {
+            var button = go.GetComponent<UnityEngine.UI.Button>();
+            var graphic = go.GetComponent<UnityEngine.UI.Graphic>();
+            if (graphic == null)
+            {
+                graphic = go.AddComponent<UnityEngine.UI.Image>();
+            }
+
+            button.targetGraphic = graphic;
+            return go;
+        }";
+        }
+
+        if (uGUIType == typeof(Text))
+        {
+            return @"public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
+        {
+            var text = go.GetComponent<UnityEngine.UI.Text>();
+            if (text.font == null)
+            {
+                text.font = UnityEngine.Resources.GetBuiltinResource<UnityEngine.Font>(""LegacyRuntime.ttf"");
+            }
+
+            return go;
+        }";
+        }
+
+        return @"public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
+        {
+            return go;
+        }";
+    }
+
+    private static string PropertyClassesTemplate(Type uGUIType, IEnumerable<PropertyInfo> propertyTypes)
+    {
+        var templates = propertyTypes.Select(property => UIPropertyClassTemplate(uGUIType, property)).ToList();
+
+        if (uGUIType == typeof(Text))
+        {
+            templates.Insert(0, TextValueTemplate());
+        }
+
+        return string.Join("\n", templates);
+    }
+
+    private static string UIPropertyClassTemplate(Type baseClass, PropertyInfo property)
+    {
+        if (baseClass == typeof(Button) && property.Name == "onClick")
+        {
+            return @"
+        public class OnClick : ButtonAttribute<UnityEngine.Events.UnityAction>
+        {
+            public OnClick(UnityEngine.Events.UnityAction value): base(""onClick"", value) {}
+            protected override void Apply(UnityEngine.UI.Button component)
+            {
+                component.onClick.RemoveAllListeners();
+                component.onClick.AddListener(GetValue());
+            }
+        }";
+        }
+
+        if (baseClass == typeof(InputField) && property.Name == "onValueChange")
+        {
+            return @"
+        public class OnValueChange : InputFieldAttribute<UnityEngine.UI.InputField.OnChangeEvent>
+        {
+            public OnValueChange(UnityEngine.UI.InputField.OnChangeEvent value): base(""onValueChange"", value) {}
+            protected override void Apply(UnityEngine.UI.InputField component)
+            {
+                component.onValueChanged = this.GetValue();
+            }
+        }";
+        }
+
+        return $@"
         public class {ToPascalCase(property.Name)} : {baseClass.Name}Attribute<{TypeString(property.PropertyType)}>
         {{
             public {ToPascalCase(property.Name)}({TypeString(property.PropertyType)} value): base(""{property.Name}"", value) {{}}
@@ -76,23 +191,36 @@ namespace Veauty.uGUI
                 component.{property.Name} = this.GetValue();
             }}
         }}";
+    }
 
-    static string ToPascalCase(string str)
+    private static string TextValueTemplate()
+    {
+        return @"
+        public class Value : TextAttribute<System.String>
+        {
+            public Value(System.String value): base(""Value"", value) {}
+            protected override void Apply(UnityEngine.UI.Text component)
+            {
+                component.text = this.GetValue();
+            }
+        }";
+    }
+
+    private static string ToPascalCase(string str)
     {
         var regex = new System.Text.RegularExpressions.Regex("(.)(.*)");
         return regex.Replace(str, s => $"{s.Groups[1].Value.ToUpper()}{s.Groups[2].Value}");
     }
 
-    static string TypeString(System.Type type)
+    private static string TypeString(Type type)
     {
         if (type.IsGenericType)
         {
-            var genericTypes = type.GetGenericArguments().Select(x => TypeString(x)).Aggregate((acc, x) => acc + $", {x}");
+            var genericTypes = type.GetGenericArguments().Select(TypeString).Aggregate((acc, x) => acc + $", {x}");
             var regex = new System.Text.RegularExpressions.Regex("(.+)(`[0-9])(.*)");
             return regex.Replace(type.FullName.Replace('+', '.'), s => $"{s.Groups[1].Value}<{genericTypes}>");
         }
 
         return type.FullName.Replace('+', '.');
     }
-
 }

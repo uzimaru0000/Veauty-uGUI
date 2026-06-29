@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "Veauty",
         "Veauty.GameObject",
-        "Veauty.uGUI"
+        "Veauty.uGUI",
+        "Veauty.uGUI.Editor"
     ],
     "includePlatforms": [
         "Editor"

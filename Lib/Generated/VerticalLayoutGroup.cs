@@ -15,7 +15,7 @@ namespace Veauty.uGUI
         protected VerticalLayoutGroupAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class VerticalLayoutGroup : GUIBase<UnityEngine.UI.VerticalLayoutGroup>
+    public partial class VerticalLayoutGroup : GUIBase<UnityEngine.UI.VerticalLayoutGroup>
     {
         public VerticalLayoutGroup(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 

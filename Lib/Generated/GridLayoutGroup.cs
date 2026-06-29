@@ -15,7 +15,7 @@ namespace Veauty.uGUI
         protected GridLayoutGroupAttribute(string key, T value) : base(key, value) { }
     }
 
-    public class GridLayoutGroup : GUIBase<UnityEngine.UI.GridLayoutGroup>
+    public partial class GridLayoutGroup : GUIBase<UnityEngine.UI.GridLayoutGroup>
     {
         public GridLayoutGroup(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
 

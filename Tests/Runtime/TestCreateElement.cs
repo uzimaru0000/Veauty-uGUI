@@ -25,7 +25,7 @@ public class TestCreateElement
     public void SetUp()
     {
         this.root = new UnityGameObject("uGUI test root");
-        var canvas = this.root.AddComponent<Canvas>();
+        var canvas = this.root.AddComponent<UnityEngine.Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.targetDisplay = 0;
 
@@ -118,6 +118,17 @@ public class TestCreateElement
         var image = UnityObject.FindAnyObjectByType<UI.Image>();
         Assert.IsTrue(image.preserveAspect);
         Assert.AreEqual(Color.red, image.color);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateRaycastReceiverElement()
+    {
+        yield return UITest(_ => new RaycastReceiver(new IAttribute<UnityGameObject>[] {
+            new RaycastReceiver.Color(Color.green)
+        }), typeof(UI.RaycastReceiver));
+
+        var receiver = UnityObject.FindAnyObjectByType<UI.RaycastReceiver>();
+        Assert.AreEqual(Color.green, receiver.color);
     }
 
     [UnityTest]
@@ -228,6 +239,76 @@ public class TestCreateElement
     }
 
     [UnityTest]
+    public IEnumerator TestRectTransformAttributesApplyToUGUINode()
+    {
+        var tree = new Text(new IAttribute<UnityGameObject>[] {
+            new Text.Value("rect"),
+            new Veauty.uGUI.RectTransform.AnchorMin(new Vector2(0.25f, 0.5f)),
+            new Veauty.uGUI.RectTransform.AnchorMax(new Vector2(0.25f, 0.5f)),
+            new Veauty.uGUI.RectTransform.Pivot(new Vector2(0.1f, 0.9f)),
+            new Veauty.uGUI.RectTransform.SizeDelta(new Vector2(120f, 32f)),
+            new Veauty.uGUI.RectTransform.AnchoredPosition(new Vector2(10f, 20f)),
+            new Veauty.uGUI.RectTransform.SendChildDimensionsChange(false)
+        });
+
+        var rendered = GameObjectRenderer.Render(tree, true);
+        rendered.transform.SetParent(this.root.transform, false);
+        yield return null;
+
+        var rectTransform = rendered.GetComponent<UnityEngine.RectTransform>();
+        Assert.AreEqual(new Vector2(0.25f, 0.5f), rectTransform.anchorMin);
+        Assert.AreEqual(new Vector2(0.25f, 0.5f), rectTransform.anchorMax);
+        Assert.AreEqual(new Vector2(0.1f, 0.9f), rectTransform.pivot);
+        Assert.AreEqual(new Vector2(120f, 32f), rectTransform.sizeDelta);
+        Assert.AreEqual(new Vector2(10f, 20f), rectTransform.anchoredPosition);
+        Assert.IsFalse(rectTransform.sendChildDimensionsChange);
+    }
+
+    [UnityTest]
+    public IEnumerator TestConcreteLayoutGroupAliasesApplyInheritedProperties()
+    {
+        yield return UITest(_ => new VerticalLayoutGroup(new IAttribute<UnityGameObject>[] {
+            new VerticalLayoutGroup.Padding(new RectOffset(1, 2, 3, 4)),
+            new VerticalLayoutGroup.ChildAlignment(TextAnchor.MiddleRight),
+            new VerticalLayoutGroup.Spacing(12f),
+            new VerticalLayoutGroup.ChildControlWidth(false),
+            new VerticalLayoutGroup.ChildForceExpandHeight(false),
+            new VerticalLayoutGroup.ReverseArrangement(true)
+        }), typeof(UI.VerticalLayoutGroup));
+
+        var layout = UnityObject.FindAnyObjectByType<UI.VerticalLayoutGroup>();
+        Assert.AreEqual(1, layout.padding.left);
+        Assert.AreEqual(2, layout.padding.right);
+        Assert.AreEqual(3, layout.padding.top);
+        Assert.AreEqual(4, layout.padding.bottom);
+        Assert.AreEqual(TextAnchor.MiddleRight, layout.childAlignment);
+        Assert.AreEqual(12f, layout.spacing);
+        Assert.IsFalse(layout.childControlWidth);
+        Assert.IsFalse(layout.childForceExpandHeight);
+        Assert.IsTrue(layout.reverseArrangement);
+    }
+
+    [UnityTest]
+    public IEnumerator TestGridLayoutGroupAliasesApplyInheritedProperties()
+    {
+        yield return UITest(_ => new GridLayoutGroup(new IAttribute<UnityGameObject>[] {
+            new GridLayoutGroup.Padding(new RectOffset(5, 6, 7, 8)),
+            new GridLayoutGroup.ChildAlignment(TextAnchor.LowerCenter),
+            new GridLayoutGroup.CellSize(new Vector2(40f, 50f)),
+            new GridLayoutGroup.Spacing(new Vector2(3f, 4f))
+        }), typeof(UI.GridLayoutGroup));
+
+        var layout = UnityObject.FindAnyObjectByType<UI.GridLayoutGroup>();
+        Assert.AreEqual(5, layout.padding.left);
+        Assert.AreEqual(6, layout.padding.right);
+        Assert.AreEqual(7, layout.padding.top);
+        Assert.AreEqual(8, layout.padding.bottom);
+        Assert.AreEqual(TextAnchor.LowerCenter, layout.childAlignment);
+        Assert.AreEqual(new Vector2(40f, 50f), layout.cellSize);
+        Assert.AreEqual(new Vector2(3f, 4f), layout.spacing);
+    }
+
+    [UnityTest]
     public IEnumerator TestLayoutElementAttributeAddsLayoutElement()
     {
         yield return UITest(_ => new Button(new IAttribute<UnityGameObject>[] {
@@ -237,6 +318,64 @@ public class TestCreateElement
         var layoutElement = UnityObject.FindAnyObjectByType<UI.Button>().GetComponent<UI.LayoutElement>();
         Assert.IsNotNull(layoutElement);
         Assert.AreEqual(88f, layoutElement.preferredHeight);
+    }
+
+    [UnityTest]
+    public IEnumerator TestLayoutFitterAttributesAddComponents()
+    {
+        yield return UITest(_ => new Image(new IAttribute<UnityGameObject>[] {
+            new ContentSizeFitter.HorizontalFit(UI.ContentSizeFitter.FitMode.PreferredSize),
+            new AspectRatioFitter.AspectMode(UI.AspectRatioFitter.AspectMode.WidthControlsHeight),
+            new AspectRatioFitter.AspectRatio(1.5f)
+        }), typeof(UI.Image));
+
+        var image = UnityObject.FindAnyObjectByType<UI.Image>();
+        var contentSizeFitter = image.GetComponent<UI.ContentSizeFitter>();
+        var aspectRatioFitter = image.GetComponent<UI.AspectRatioFitter>();
+        Assert.IsNotNull(contentSizeFitter);
+        Assert.AreEqual(UI.ContentSizeFitter.FitMode.PreferredSize, contentSizeFitter.horizontalFit);
+        Assert.IsNotNull(aspectRatioFitter);
+        Assert.AreEqual(UI.AspectRatioFitter.AspectMode.WidthControlsHeight, aspectRatioFitter.aspectMode);
+        Assert.AreEqual(1.5f, aspectRatioFitter.aspectRatio);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCanvasGroupAttributeAddsCanvasGroup()
+    {
+        yield return UITest(_ => new Button(new IAttribute<UnityGameObject>[] {
+            new Veauty.uGUI.CanvasGroup.Alpha(0.5f),
+            new Veauty.uGUI.CanvasGroup.Interactable(false),
+            new Veauty.uGUI.CanvasGroup.BlocksRaycasts(false),
+            new Veauty.uGUI.CanvasGroup.IgnoreParentGroups(true)
+        }), typeof(UI.Button));
+
+        var canvasGroup = UnityObject.FindAnyObjectByType<UI.Button>().GetComponent<UnityEngine.CanvasGroup>();
+        Assert.IsNotNull(canvasGroup);
+        Assert.AreEqual(0.5f, canvasGroup.alpha);
+        Assert.IsFalse(canvasGroup.interactable);
+        Assert.IsFalse(canvasGroup.blocksRaycasts);
+        Assert.IsTrue(canvasGroup.ignoreParentGroups);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCanvasElementAppliesCanvasProperties()
+    {
+        var rendered = GameObjectRenderer.Render(new Veauty.uGUI.Canvas(new IAttribute<UnityGameObject>[] {
+            new Veauty.uGUI.Canvas.RenderMode(UnityEngine.RenderMode.WorldSpace),
+            new Veauty.uGUI.Canvas.PlaneDistance(5f),
+            new Veauty.uGUI.Canvas.PixelPerfect(true),
+            new Veauty.uGUI.Canvas.SortingOrder(42),
+            new Veauty.uGUI.Canvas.UpdateRectTransformForStandalone(UnityEngine.StandaloneRenderResize.Enabled)
+        }), true);
+        var canvas = rendered.GetComponent<UnityEngine.Canvas>();
+        Assert.AreEqual(UnityEngine.RenderMode.WorldSpace, canvas.renderMode);
+        Assert.AreEqual(5f, canvas.planeDistance);
+        Assert.IsTrue(canvas.pixelPerfect);
+        Assert.AreEqual(42, canvas.sortingOrder);
+        Assert.AreEqual(UnityEngine.StandaloneRenderResize.Enabled, canvas.updateRectTransformForStandalone);
+
+        rendered.transform.SetParent(this.root.transform, false);
+        yield return null;
     }
 
     private static IAttribute<UnityGameObject>[] NoAttrs()

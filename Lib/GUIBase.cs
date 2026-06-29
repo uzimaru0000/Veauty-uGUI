@@ -17,15 +17,27 @@ namespace Veauty.uGUI
         public override void Apply(UnityEngine.GameObject obj)
         {
             var component = obj.GetComponent<T1>();
-            if (component == null && typeof(T1) == typeof(UnityEngine.UI.LayoutElement))
+            if (component == null && ShouldAddMissingComponent())
             {
-                component = obj.AddComponent<UnityEngine.UI.LayoutElement>() as T1;
+                component = obj.AddComponent(typeof(T1)) as T1;
             }
 
             if (component)
             {
                 Apply(component);
             }
+        }
+
+        private static bool ShouldAddMissingComponent()
+        {
+            var type = typeof(T1);
+            return type == typeof(UnityEngine.UI.LayoutElement)
+                || type == typeof(UnityEngine.UI.ContentSizeFitter)
+                || type == typeof(UnityEngine.UI.AspectRatioFitter)
+                || type == typeof(UnityEngine.CanvasGroup)
+                || type == typeof(UnityEngine.UI.Shadow)
+                || type == typeof(UnityEngine.UI.Outline)
+                || type == typeof(UnityEngine.UI.PositionAsUV1);
         }
     }
 }
