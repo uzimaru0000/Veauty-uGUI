@@ -378,6 +378,126 @@ public class TestCreateElement
         yield return null;
     }
 
+    [UnityTest]
+    public IEnumerator TestCompositeUIBuildsTodoList()
+    {
+        System.Action<TodoState> setState = null;
+
+        _ = new VeautyObject<TodoState>(
+            this.root,
+            (state, set) =>
+            {
+                setState = set;
+
+                var headerRow = new HorizontalLayoutGroup(
+                    new IAttribute<UnityGameObject>[] {
+                        new HorizontalLayoutGroup.Spacing(8f),
+                        new HorizontalLayoutGroup.ChildControlWidth(true),
+                        new HorizontalLayoutGroup.ChildForceExpandWidth(true),
+                        new LayoutElement.PreferredHeight(48f)
+                    },
+                    new Text(new IAttribute<UnityGameObject>[] {
+                        new Text.Value("TODO"),
+                        new Text.FontSize(24),
+                        new Graphic.Color(Color.white)
+                    }),
+                    new Button(new IAttribute<UnityGameObject>[] {
+                        new Button.OnClick(() => set(new TodoState {
+                            Items = state.Items,
+                            SelectedIndex = -1
+                        }))
+                    },
+                        new Text(new IAttribute<UnityGameObject>[] {
+                            new Text.Value("Clear Selection")
+                        })
+                    )
+                );
+
+                var items = new IVTree[state.Items.Length];
+                for (int i = 0; i < state.Items.Length; i++)
+                {
+                    var idx = i;
+                    var isSelected = state.SelectedIndex == i;
+                    items[i] = new Button(
+                        new IAttribute<UnityGameObject>[] {
+                            new Button.OnClick(() => set(new TodoState {
+                                Items = state.Items,
+                                SelectedIndex = idx
+                            })),
+                            new LayoutElement.PreferredHeight(36f)
+                        },
+                        new Image(new IAttribute<UnityGameObject>[] {
+                            new Graphic.Color(isSelected ? new Color(0.2f, 0.6f, 1f) : Color.gray)
+                        }),
+                        new Text(new IAttribute<UnityGameObject>[] {
+                            new Text.Value(state.Items[i]),
+                            new Text.FontSize(18),
+                            new Graphic.Color(Color.black)
+                        })
+                    );
+                }
+
+                var listBody = new VerticalLayoutGroup(
+                    new IAttribute<UnityGameObject>[] {
+                        new VerticalLayoutGroup.Padding(new RectOffset(8, 8, 4, 4)),
+                        new VerticalLayoutGroup.Spacing(4f),
+                        new VerticalLayoutGroup.ChildControlWidth(true),
+                        new VerticalLayoutGroup.ChildForceExpandHeight(false)
+                    },
+                    items
+                );
+
+                return new VerticalLayoutGroup(
+                    new IAttribute<UnityGameObject>[] {
+                        new VerticalLayoutGroup.Spacing(0f),
+                        new VerticalLayoutGroup.ChildControlWidth(true),
+                        new VerticalLayoutGroup.ChildForceExpandHeight(false),
+                        new Veauty.uGUI.RectTransform.AnchorMin(Vector2.zero),
+                        new Veauty.uGUI.RectTransform.AnchorMax(Vector2.one),
+                        new Veauty.uGUI.RectTransform.OffsetMin(Vector2.zero),
+                        new Veauty.uGUI.RectTransform.OffsetMax(Vector2.zero)
+                    },
+                    headerRow,
+                    listBody
+                );
+            },
+            new TodoState {
+                Items = new[] { "Buy milk", "Write tests", "Ship feature" },
+                SelectedIndex = -1
+            }
+        );
+
+        yield return null;
+
+        var texts = UnityObject.FindObjectsByType<UI.Text>(FindObjectsSortMode.None);
+        Assert.IsTrue(texts.Any(t => t.text == "TODO"));
+        Assert.IsTrue(texts.Any(t => t.text == "Buy milk"));
+        Assert.IsTrue(texts.Any(t => t.text == "Write tests"));
+        Assert.IsTrue(texts.Any(t => t.text == "Ship feature"));
+        Assert.IsTrue(texts.Any(t => t.text == "Clear Selection"));
+
+        var layouts = UnityObject.FindObjectsByType<UI.VerticalLayoutGroup>(FindObjectsSortMode.None);
+        Assert.IsTrue(layouts.Length >= 2);
+
+        var headerLayout = UnityObject.FindAnyObjectByType<UI.HorizontalLayoutGroup>();
+        Assert.IsNotNull(headerLayout);
+        Assert.AreEqual(8f, headerLayout.spacing);
+
+        setState(new TodoState {
+            Items = new[] { "Buy milk", "Write tests", "Ship feature" },
+            SelectedIndex = 1
+        });
+        yield return null;
+
+        var images = UnityObject.FindObjectsByType<UI.Image>(FindObjectsSortMode.None);
+        var selectedImage = images.FirstOrDefault(img =>
+            img.color == new Color(0.2f, 0.6f, 1f));
+        Assert.IsNotNull(selectedImage, "Selected item should have highlight color");
+
+        var grayImages = images.Where(img => img.color == Color.gray).ToArray();
+        Assert.AreEqual(2, grayImages.Length, "Non-selected items should be gray");
+    }
+
     private static IAttribute<UnityGameObject>[] NoAttrs()
     {
         return new IAttribute<UnityGameObject>[] {};
@@ -386,5 +506,11 @@ public class TestCreateElement
     private struct CounterState
     {
         public int Count;
+    }
+
+    private struct TodoState
+    {
+        public string[] Items;
+        public int SelectedIndex;
     }
 }
