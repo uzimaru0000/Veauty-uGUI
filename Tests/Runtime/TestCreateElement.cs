@@ -498,6 +498,141 @@ public class TestCreateElement
         Assert.AreEqual(2, grayImages.Length, "Non-selected items should be gray");
     }
 
+    [UnityTest]
+    public IEnumerator TestCreateToggleElement()
+    {
+        yield return UITest(_ => new Toggle(new IAttribute<UnityGameObject>[] {
+            new Toggle.IsOn(true)
+        }), typeof(UI.Toggle));
+
+        var toggle = UnityObject.FindAnyObjectByType<UI.Toggle>();
+        Assert.IsTrue(toggle.isOn);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateToggleGroupElement()
+    {
+        yield return UITest(_ => new ToggleGroup(new IAttribute<UnityGameObject>[] {
+            new ToggleGroup.AllowSwitchOff(true)
+        }), typeof(UI.ToggleGroup));
+
+        var group = UnityObject.FindAnyObjectByType<UI.ToggleGroup>();
+        Assert.IsTrue(group.allowSwitchOff);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateSliderElement()
+    {
+        yield return UITest(_ => new Slider(new IAttribute<UnityGameObject>[] {
+            new Slider.MinValue(0f),
+            new Slider.MaxValue(100f),
+            new Slider.Value(42f),
+            new Slider.WholeNumbers(true)
+        }), typeof(UI.Slider));
+
+        var slider = UnityObject.FindAnyObjectByType<UI.Slider>();
+        Assert.AreEqual(0f, slider.minValue);
+        Assert.AreEqual(100f, slider.maxValue);
+        Assert.AreEqual(42f, slider.value);
+        Assert.IsTrue(slider.wholeNumbers);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateScrollbarElement()
+    {
+        yield return UITest(_ => new Scrollbar(new IAttribute<UnityGameObject>[] {
+            new Scrollbar.Value(0.75f),
+            new Scrollbar.Size(0.2f),
+            new Scrollbar.NumberOfSteps(5)
+        }), typeof(UI.Scrollbar));
+
+        var scrollbar = UnityObject.FindAnyObjectByType<UI.Scrollbar>();
+        Assert.AreEqual(0.75f, scrollbar.value, 0.01f);
+        Assert.AreEqual(0.2f, scrollbar.size, 0.01f);
+        Assert.AreEqual(5, scrollbar.numberOfSteps);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateScrollRectElement()
+    {
+        yield return UITest(_ => new ScrollRect(new IAttribute<UnityGameObject>[] {
+            new ScrollRect.Horizontal(false),
+            new ScrollRect.Vertical(true),
+            new ScrollRect.Inertia(false),
+            new ScrollRect.ScrollSensitivity(5f)
+        }), typeof(UI.ScrollRect));
+
+        var scrollRect = UnityObject.FindAnyObjectByType<UI.ScrollRect>();
+        Assert.IsFalse(scrollRect.horizontal);
+        Assert.IsTrue(scrollRect.vertical);
+        Assert.IsFalse(scrollRect.inertia);
+        Assert.AreEqual(5f, scrollRect.scrollSensitivity);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateMaskElement()
+    {
+        yield return UITest(_ => new Mask(new IAttribute<UnityGameObject>[] {
+            new Mask.ShowMaskGraphic(false)
+        }), typeof(UI.Mask));
+
+        var mask = UnityObject.FindAnyObjectByType<UI.Mask>();
+        Assert.IsFalse(mask.showMaskGraphic);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateRectMask2DElement()
+    {
+        yield return UITest(_ => new RectMask2D(new IAttribute<UnityGameObject>[] {
+            new RectMask2D.Softness(new Vector2Int(4, 4))
+        }), typeof(UI.RectMask2D));
+
+        var mask = UnityObject.FindAnyObjectByType<UI.RectMask2D>();
+        Assert.AreEqual(new Vector2Int(4, 4), mask.softness);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateDropdownElement()
+    {
+        var options = new System.Collections.Generic.List<UI.Dropdown.OptionData> {
+            new UI.Dropdown.OptionData("Alpha"),
+            new UI.Dropdown.OptionData("Beta"),
+            new UI.Dropdown.OptionData("Gamma")
+        };
+
+        yield return UITest(_ => new Dropdown(new IAttribute<UnityGameObject>[] {
+            new Dropdown.Options(options),
+            new Dropdown.Value(1)
+        }), typeof(UI.Dropdown));
+
+        var dropdown = UnityObject.FindAnyObjectByType<UI.Dropdown>();
+        Assert.AreEqual(3, dropdown.options.Count);
+        Assert.AreEqual("Beta", dropdown.options[1].text);
+        Assert.AreEqual(1, dropdown.value);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateSelectableElement()
+    {
+        yield return UITest(_ => new Selectable(new IAttribute<UnityGameObject>[] {
+            new Selectable.Interactable(false)
+        }), typeof(UI.Selectable));
+
+        var selectable = UnityObject.FindAnyObjectByType<UI.Selectable>();
+        Assert.IsFalse(selectable.interactable);
+    }
+
+    [UnityTest]
+    public IEnumerator TestCreateRawImageElement()
+    {
+        yield return UITest(_ => new RawImage(new IAttribute<UnityGameObject>[] {
+            new RawImage.UvRect(new Rect(0.1f, 0.2f, 0.5f, 0.5f))
+        }), typeof(UI.RawImage));
+
+        var rawImage = UnityObject.FindAnyObjectByType<UI.RawImage>();
+        Assert.AreEqual(new Rect(0.1f, 0.2f, 0.5f, 0.5f), rawImage.uvRect);
+    }
+
     private static IAttribute<UnityGameObject>[] NoAttrs()
     {
         return new IAttribute<UnityGameObject>[] {};
