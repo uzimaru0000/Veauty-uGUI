@@ -9,6 +9,24 @@ namespace Veauty.uGUI.Presets
 {
     public static class V
     {
+        public static IVTree Component(FunctionComponent component)
+            => Veauty.VTree.FunctionComponents.Create(component);
+
+        public static IVTree Component(string key, FunctionComponent component)
+            => Veauty.VTree.FunctionComponents.Create(key, component);
+
+        public static IVTree Component<TProps>(FunctionComponent<TProps> component, TProps props)
+            => Veauty.VTree.FunctionComponents.Create(component, props);
+
+        public static IVTree Component<TProps>(string key, FunctionComponent<TProps> component, TProps props)
+            => Veauty.VTree.FunctionComponents.Create(key, component, props);
+
+        public static IVTree KeyedComponent(string key, FunctionComponent component)
+            => Veauty.VTree.FunctionComponents.Keyed(key, component);
+
+        public static IVTree KeyedComponent<TProps>(string key, FunctionComponent<TProps> component, TProps props)
+            => Veauty.VTree.FunctionComponents.Keyed(key, component, props);
+
         public static IVTree Text(string value,
             int? fontSize = null,
             Color? color = null,

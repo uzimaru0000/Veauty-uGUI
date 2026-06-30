@@ -60,6 +60,11 @@ public class TestCreateElement
         return new VeautyObject<Unit>(this.root, func);
     }
 
+    private static IVTree Resolve(IVTree tree)
+    {
+        return new HookRuntime().Resolve<UnityGameObject>(tree);
+    }
+
     private IEnumerator UITest(System.Func<Unit, IVTree> func, params System.Type[] uiComponentTypes)
     {
         _ = CreateVeauty(func);
@@ -206,11 +211,13 @@ public class TestCreateElement
             ("c", new Text(new IAttribute<UnityGameObject>[] { new Text.Value("C") })),
             ("a", new Text(new IAttribute<UnityGameObject>[] { new Text.Value("A") }))
         );
-        var rendered = GameObjectRenderer.Render(oldTree, true);
+        var oldResolvedTree = Resolve(oldTree);
+        var newResolvedTree = Resolve(newTree);
+        var rendered = GameObjectRenderer.Render(oldResolvedTree, true);
         rendered.transform.SetParent(this.root.transform, false);
         var oldB = rendered.transform.GetChild(1).gameObject;
 
-        rendered = Patch.Apply(rendered, oldTree, Diff<UnityGameObject>.Calc(oldTree, newTree), true);
+        rendered = Patch.Apply(rendered, oldResolvedTree, Diff<UnityGameObject>.Calc(oldResolvedTree, newResolvedTree), true);
         yield return null;
 
         Assert.AreSame(oldB, rendered.transform.GetChild(0).gameObject);
@@ -537,6 +544,29 @@ public class TestCreateElement
         Assert.IsTrue(slider.wholeNumbers);
     }
 
+    [Test]
+    public void TestSliderPartsAreHostConfigurationNotDiffChildren()
+    {
+        var oldTree = new Slider(
+            new IAttribute<UnityGameObject>[] { new Slider.Value(0.5f) },
+            Slider.Background(),
+            Slider.Fill(),
+            Slider.Handle(),
+            new Text(new IAttribute<UnityGameObject>[] { new Text.Value("content") })
+        );
+        var newTree = new Slider(
+            new IAttribute<UnityGameObject>[] { new Slider.Value(0.5f) },
+            Slider.Background(color: Color.red),
+            Slider.Fill(color: Color.green),
+            Slider.Handle(color: Color.blue),
+            new Text(new IAttribute<UnityGameObject>[] { new Text.Value("content") })
+        );
+
+        Assert.AreEqual(1, oldTree.GetKids().Length);
+        Assert.AreEqual(1, oldTree.GetDescendantsCount());
+        Assert.AreEqual(0, Diff<UnityGameObject>.Calc(oldTree, newTree).Length);
+    }
+
     [UnityTest]
     public IEnumerator TestCreateScrollbarElement()
     {
@@ -631,6 +661,89 @@ public class TestCreateElement
 
         var rawImage = UnityObject.FindAnyObjectByType<UI.RawImage>();
         Assert.AreEqual(new Rect(0.1f, 0.2f, 0.5f, 0.5f), rawImage.uvRect);
+    }
+
+    [UnityTest]
+    public IEnumerator TestButtonClickCallsHookSetter()
+    {
+        _ = new VeautyObject(
+            this.root,
+            () =>
+            {
+                var count = Hooks.UseState(0);
+                return new VerticalLayoutGroup(
+                    NoAttrs(),
+                    new Button(new IAttribute<UnityGameObject>[] {
+                        new Button.OnClick(() => count.Set(x => x + 1))
+                    }),
+                    new Text(new IAttribute<UnityGameObject>[] {
+                        new Text.Value("count:" + count.Value)
+                    })
+                );
+            }
+        );
+
+        yield return null;
+        var text = UnityObject.FindAnyObjectByType<UI.Text>();
+        Assert.AreEqual("count:0", text.text);
+
+        var button = UnityObject.FindAnyObjectByType<UI.Button>();
+        ExecuteEvents.Execute(
+            target: button.gameObject,
+            eventData: new PointerEventData(EventSystem.current),
+            functor: ExecuteEvents.pointerClickHandler
+        );
+        yield return null;
+
+        Assert.AreEqual("count:1", text.text);
+    }
+
+    [UnityTest]
+    public IEnumerator TestEventAttributeReplacesOldListenersWithoutLeak()
+    {
+        var firstCalls = 0;
+        var secondCalls = 0;
+        System.Action<CounterState> setState = null;
+
+        _ = new VeautyObject<CounterState>(
+            this.root,
+            (state, set) =>
+            {
+                setState = set;
+                if (state.Count == 0)
+                {
+                    return new Button(new IAttribute<UnityGameObject>[] {
+                        new Button.OnClick(() => firstCalls++)
+                    });
+                }
+
+                return new Button(new IAttribute<UnityGameObject>[] {
+                    new Button.OnClick(() => secondCalls++)
+                });
+            },
+            new CounterState { Count = 0 }
+        );
+
+        yield return null;
+        var button = UnityObject.FindAnyObjectByType<UI.Button>();
+        ExecuteEvents.Execute(
+            target: button.gameObject,
+            eventData: new PointerEventData(EventSystem.current),
+            functor: ExecuteEvents.pointerClickHandler
+        );
+        Assert.AreEqual(1, firstCalls);
+        Assert.AreEqual(0, secondCalls);
+
+        setState(new CounterState { Count = 1 });
+        yield return null;
+
+        ExecuteEvents.Execute(
+            target: button.gameObject,
+            eventData: new PointerEventData(EventSystem.current),
+            functor: ExecuteEvents.pointerClickHandler
+        );
+        Assert.AreEqual(1, firstCalls, "Old listener must not fire after replacement");
+        Assert.AreEqual(1, secondCalls, "New listener must fire after replacement");
     }
 
     private static IAttribute<UnityGameObject>[] NoAttrs()

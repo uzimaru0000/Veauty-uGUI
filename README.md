@@ -24,7 +24,7 @@ Add Veauty, Veauty-GameObject, and Veauty-uGUI to `Packages/manifest.json`.
 
 ## Example
 
-Mount a Veauty tree under a Canvas GameObject.
+Mount a Veauty tree under a Canvas GameObject using function components and hooks.
 
 ```csharp
 using UnityEngine;
@@ -32,32 +32,27 @@ using Veauty;
 using Veauty.GameObject;
 using Veauty.uGUI;
 
-public struct CounterState
-{
-    public int Count;
-}
-
 public class CounterPanel : MonoBehaviour
 {
-    private VeautyObject<CounterState> app;
+    private VeautyObject app;
 
     private void Start()
     {
-        this.app = new VeautyObject<CounterState>(
-            this.gameObject,
-            (state, setState) => new Button(
-                new IAttribute<GameObject>[] {
-                    new Button.OnClick(() => setState(new CounterState {
-                        Count = state.Count + 1
-                    }))
-                },
-                new Text(new IAttribute<GameObject>[] {
-                    new Text.Value("Count " + state.Count),
-                    new Text.FontSize(32),
-                    new Graphic.Color(Color.white)
-                })
-            ),
-            new CounterState { Count = 0 }
+        this.app = new VeautyObject(this.gameObject, Render);
+    }
+
+    static IVTree Render()
+    {
+        var count = Hooks.UseState(0);
+        return new Button(
+            new IAttribute<GameObject>[] {
+                new Button.OnClick(() => count.Set(x => x + 1))
+            },
+            new Text(new IAttribute<GameObject>[] {
+                new Text.Value("Count " + count.Value),
+                new Text.FontSize(32),
+                new Graphic.Color(Color.white)
+            })
         );
     }
 }
@@ -65,7 +60,7 @@ public class CounterPanel : MonoBehaviour
 
 ## Runtime behavior
 
-- uGUI elements are Veauty widgets backed by Unity UI components.
+- uGUI elements are Veauty host nodes backed by Unity UI components.
 - Rendering is delegated to Veauty-GameObject, so keyed child moves, redraws, and typed component replacement use the same patch semantics.
 - When mounted under a `RectTransform`, rendered nodes receive `RectTransform` and are parented without keeping world transform.
 - Event attributes such as `Button.OnClick` replace existing listeners when applied.

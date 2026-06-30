@@ -19,14 +19,34 @@ namespace Veauty.uGUI
         }
     }
 
-    public abstract class GUIBase<T> : Widget<UnityEngine.GameObject> where T : UnityEngine.Component
+    public abstract class GUIBase<T> :
+        Node<UnityEngine.GameObject, T>,
+        IHostLifecycle<UnityEngine.GameObject>,
+        IHostLifecycleTree<UnityEngine.GameObject>
+        where T : UnityEngine.Component
     {
-        protected GUIBase(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids) : base(attrs, kids) { }
+        protected GUIBase(IEnumerable<IAttribute<UnityEngine.GameObject>> attrs, params IVTree[] kids)
+            : base(typeof(T).FullName, attrs, kids)
+        {
+        }
 
-        public override IVTree Render() => new Node<UnityEngine.GameObject, T>(typeof(T).FullName, attrs, GetKids());
+        public virtual UnityEngine.GameObject Init(UnityEngine.GameObject go) => go;
+        public virtual void Destroy(UnityEngine.GameObject go) { }
+        public virtual void AfterRenderKids(UnityEngine.GameObject go) { }
+        public IHostLifecycle<UnityEngine.GameObject>[] GetHostLifecycles()
+            => new IHostLifecycle<UnityEngine.GameObject>[] { this };
 
-        public override UnityEngine.GameObject Init(UnityEngine.GameObject go) => go;
-        public override void Destroy(UnityEngine.GameObject go) { }
+        public override int GetDescendantsCount()
+        {
+            var count = 0;
+            var contentKids = GetKids();
+            foreach (var kid in contentKids)
+            {
+                count += kid.GetDescendantsCount();
+            }
+
+            return count + contentKids.Length;
+        }
 
         protected static UnityEngine.GameObject CreateChild(UnityEngine.GameObject parent, string name)
         {
