@@ -1,16 +1,16 @@
 # Veauty-uGUI
 
-Widgets and attributes for building Unity uGUI declaratively with Veauty.
+Veauty で Unity の uGUI を宣言的に構築するためのウィジェット・属性パッケージ。
 
-## Requirements
+## 要件
 
-- Unity 6000.5 or later (Unity 6)
+- Unity 6000.5 以上 (Unity 6)
 - `com.uzimaru.veauty`
 - `com.uzimaru.veauty-gameobject`
 
-## Install
+## インストール
 
-Add to `Packages/manifest.json`:
+`Packages/manifest.json` に追加:
 
 ```json
 {
@@ -22,9 +22,9 @@ Add to `Packages/manifest.json`:
 }
 ```
 
-## Usage
+## 基本的な使い方
 
-Mount a `VeautyObject` under a Canvas GameObject to build uGUI.
+Canvas 配下の GameObject に `VeautyObject` をマウントして uGUI を構築します。
 
 ```csharp
 using UnityEngine;
@@ -66,11 +66,11 @@ public class CounterPanel : MonoBehaviour
 }
 ```
 
-## Two API levels
+## 2 つの API レベル
 
 ### Presets API (`Veauty.uGUI.Presets`)
 
-Factory methods on `V` create widgets with sensible defaults. Use `[]` indexer for children.
+`V` クラスのファクトリメソッドでデフォルト値付きのウィジェットを簡潔に記述できます。`[]` インデクサで子要素を指定します。
 
 ```csharp
 using Veauty.uGUI.Presets;
@@ -90,7 +90,7 @@ V.VLayout(spacing: 8f, padding: new RectOffset(16, 16, 12, 12))[
 
 ### Base API (`Veauty.uGUI`)
 
-Low-level API where every parameter is explicit. Sub-components (Slider handle, Toggle checkmark, etc.) are also specified explicitly.
+すべてのパラメータを明示的に指定する低レベル API。サブコンポーネント (Slider の Handle, Toggle の Checkmark 等) も明示的に構成します。
 
 ```csharp
 using Veauty.uGUI;
@@ -102,10 +102,10 @@ new Slider(attrs,
 )
 ```
 
-## Widget list
+## ウィジェット一覧
 
-| Widget | Sub-components |
-|--------|---------------|
+| ウィジェット | サブコンポーネント |
+|------------|-------------------|
 | `Button` | - |
 | `Text` | - |
 | `Image` | - |
@@ -119,9 +119,9 @@ new Slider(attrs,
 | `VerticalLayoutGroup` | - |
 | `GridLayoutGroup` | - |
 
-## Auto-added component attributes
+## 自動追加される属性コンポーネント
 
-These attributes automatically add the backing component if it is missing on the target uGUI node:
+以下の属性は、対象の uGUI ノードにコンポーネントが存在しない場合自動的に追加されます:
 
 `LayoutElement`, `ContentSizeFitter`, `AspectRatioFitter`, `CanvasGroup`, `Shadow`, `Outline`, `PositionAsUV1`
 
@@ -136,6 +136,6 @@ V.Image(extras: new IAttribute<GameObject>[] {
 })
 ```
 
-## Notes
+## 注意事項
 
-uGUI requires a Canvas, GraphicRaycaster, and EventSystem in the scene. Veauty-uGUI does not create these automatically — set them up in the scene or in your bootstrap code.
+uGUI を使うには Canvas, GraphicRaycaster, EventSystem がシーンに必要です。Veauty-uGUI はこれらを自動生成しないので、シーンまたはブートストラップコードで用意してください。
