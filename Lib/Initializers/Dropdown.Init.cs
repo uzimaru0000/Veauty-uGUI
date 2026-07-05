@@ -2,6 +2,16 @@ namespace Veauty.uGUI
 {
     public partial class Dropdown
     {
+        /// <summary>
+        /// Builds the complete internal dropdown structure with hardcoded dark-theme colors:
+        /// background Image (RGB 0.22, 0.24, 0.28) as <c>targetGraphic</c>, "Label" caption text,
+        /// "Arrow" glyph, and a deactivated "Template" scroll view (viewport mask, content with
+        /// VerticalLayoutGroup/ContentSizeFitter, item Toggle with background, checkmark, and
+        /// label) wired to <c>template</c>, <c>captionText</c> and <c>itemText</c>.
+        /// There are no sub-components to override; customize via attributes instead.
+        /// </summary>
+        /// <param name="go">The host GameObject (already has the Dropdown component).</param>
+        /// <returns>The same GameObject.</returns>
         public override UnityEngine.GameObject Init(UnityEngine.GameObject go)
         {
             var dropdown = go.GetComponent<UnityEngine.UI.Dropdown>();

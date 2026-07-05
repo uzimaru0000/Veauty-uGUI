@@ -136,6 +136,13 @@ V.Image(extras: new IAttribute<GameObject>[] {
 })
 ```
 
+## ドキュメント
+
+- [マニュアル](Documentation~/ja/com.uzimaru.veauty-ugui.md) — フルマニュアル (getting started, architecture, presets, widgets, sub-components, attributes, code generation)
+- [API リファレンス](Documentation~/ja/api-reference.md) — 公開 API 全体
+- [AGENTS.md](AGENTS.md) — LLM コーディングエージェント向けガイド (英語)
+- [CHANGELOG.md](CHANGELOG.md) — 更新履歴 (英語)
+
 ## 注意事項
 
 uGUI を使うには Canvas, GraphicRaycaster, EventSystem がシーンに必要です。Veauty-uGUI はこれらを自動生成しないので、シーンまたはブートストラップコードで用意してください。

@@ -1,0 +1,23 @@
+# Veauty-uGUI
+
+> Widgets and typed attributes for building Unity uGUI declaratively with Veauty, a React-like Virtual DOM for Unity.
+
+Maps every public UnityEngine.UI component to a VTree widget class (`Veauty.uGUI`), with composition sub-components for Slider/Toggle/Scrollbar/InputField and a `V` factory with auto-filled defaults (`Veauty.uGUI.Presets`). Requires com.uzimaru.veauty and com.uzimaru.veauty-gameobject; Unity 6000.5+.
+
+## Docs
+
+- [Manual](Documentation~/com.uzimaru.veauty-ugui.md): entry-point manual
+- [Getting started](Documentation~/getting-started.md): install, scene prerequisites, minimal example
+- [Architecture](Documentation~/architecture.md): render cycle, widget lifecycle, childOffset mechanism
+- [Presets API](Documentation~/presets.md): V factory, Element indexer, sub-component auto-injection
+- [Widget catalog](Documentation~/widgets.md): all widgets, GUIBase lifecycle, Ref<T>
+- [Sub-components](Documentation~/sub-components.md): ISubComponent system and hardcoded defaults
+- [Attribute system](Documentation~/attributes.md): GuiAttributeBase, auto-add whitelist, silent no-op gotcha
+- [Code generation](Documentation~/code-generation.md): Veauty > GenerateUIClass and the partial-class pattern
+- [API reference](Documentation~/api-reference.md): full public API
+- [Agent guide](AGENTS.md): rules and pitfalls for coding agents
+
+## Optional
+
+- [日本語ドキュメント](Documentation~/ja/com.uzimaru.veauty-ugui.md): Japanese manual
+- [Changelog](CHANGELOG.md): version history

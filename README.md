@@ -136,6 +136,13 @@ V.Image(extras: new IAttribute<GameObject>[] {
 })
 ```
 
+## Documentation
+
+- [Manual](Documentation~/com.uzimaru.veauty-ugui.md) — full manual (getting started, architecture, presets, widgets, sub-components, attributes, code generation)
+- [API reference](Documentation~/api-reference.md) — complete public API
+- [AGENTS.md](AGENTS.md) — guide for LLM coding agents
+- [CHANGELOG.md](CHANGELOG.md) — version history
+
 ## Notes
 
 uGUI requires a Canvas, GraphicRaycaster, and EventSystem in the scene. Veauty-uGUI does not create these automatically — set them up in the scene or in your bootstrap code.
