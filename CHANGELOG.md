@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-07-06
+
+### Added
+- Package documentation under `Documentation~/` (manual, getting started, architecture, presets, widgets, sub-components, attributes, code generation, API reference) with Japanese translations under `Documentation~/ja/`.
+- XML documentation comments (`///`) on all public APIs in hand-written `Lib/` files.
+- `AGENTS.md`, `CLAUDE.md`, and `llms.txt` for coding agents.
+- This changelog.
+- `license` field (MIT) in `package.json`.
+
+### Changed
+- `UIClass.cs` code generator now emits XML documentation comments; `Lib/Generated/` regenerated (nested attribute classes are no longer `partial`, matching the current generator template).
+- README: added Documentation section.
+- Dependencies `com.uzimaru.veauty` / `com.uzimaru.veauty-gameobject` now reference `v0.5.1`.
+
 ## [0.5.0] - 2025
 
 ### Added
